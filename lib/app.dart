@@ -24,7 +24,7 @@ class App extends StatelessWidget{
 
         // Cor primária (para AppBar, FloatingActionButton, etc.)
         primaryColor: AppController.instance.isDarkTheme 
-          ? Color(0xFF3535B5) 
+          ? Color(0xFF3535B5) // Tema escuro
           : Color(0xFFFB5B4D),
 
         // Swatch para componentes baseados em Material
