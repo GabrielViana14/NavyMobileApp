@@ -1,4 +1,4 @@
-# Mavy Mobile App
+# Navy Mobile App
 
 A new Flutter project.
 
