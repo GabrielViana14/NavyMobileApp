@@ -1,4 +1,4 @@
-# flutter_application_test
+# Mavy Mobile App
 
 A new Flutter project.
 
