@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_test/loginPage.dart';
 import 'app_controller.dart';
 import 'homePage.dart';
 
 // StatelessWidget são paginas estaticas
 class App extends StatelessWidget{
-  const App({super.key});
+  const App({
+    super.key, 
+    required this.logado
+    });
 
   //'final' são variáveis que não podem ser alteradas 
   //depois de serem inicializadas
-
+  final bool logado;
+  
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(animation: AppController.instance ,builder: (context, child) {
@@ -41,10 +46,10 @@ class App extends StatelessWidget{
         appBarTheme: AppBarTheme(
           backgroundColor: AppController.instance.isDarkTheme 
                             ? Color(0xFFFB5B4D) 
-                            : Color(0xFF3535B5),
+                            : Color(0xFFFFFFFF),
           foregroundColor: AppController.instance.isDarkTheme 
                             ? Color(0xFF3535B5) 
-                            : Color(0xFFFB5B4D), // texto e ícones
+                            : Color(0xFF01017D), // texto e ícones
         ),
 
         // Estilo dos botões
@@ -73,11 +78,11 @@ class App extends StatelessWidget{
         bottomAppBarTheme: BottomAppBarTheme(
           color: AppController.instance.isDarkTheme 
           ? Color(0xFFFB5B4D)
-          : Color(0xFF3535B5),
+          : Color(0xFFFFFFFF), //light theme
         ),
 
       ),
-      home: HomePage(),
+      home: AppController.instance.logado ? HomePage() : LoginPage(),
     );
     },
     );

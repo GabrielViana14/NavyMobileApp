@@ -119,6 +119,12 @@ class HomePageState extends State<HomePage> {
               funcao: () {
                 print("Abrir tela home");
               },
+              asset: 'assets/icon/bottom_appbar_home_icon.png',
+            ),
+            Container(
+              width: 3,
+              height: 46,
+              color: Color(0xFF4444E8),
             ),
             BottomAppBarButton(
               text: "Mapa",
@@ -126,13 +132,25 @@ class HomePageState extends State<HomePage> {
               funcao: () {
                 print("Abrir tela mapa");
               },
+              asset: 'assets/icon/bottom_appbar_map_icon.png',
+            ),
+            Container(
+              width: 3,
+              height: 46,
+              color: Color(0xFF4444E8),
             ),
             BottomAppBarButton(
-              text: "pesquisar",
+              text: "Reservas",
               icone: Icons.search,
               funcao: () {
                 print("Abrir tela pesquisar");
               },
+              asset: 'assets/icon/bottom_appbar_reservas_icon.png',
+            ),
+            Container(
+              width: 3,
+              height: 46,
+              color: Color(0xFF4444E8),
             ),
             BottomAppBarButton(
               text: "Perfil",
@@ -140,6 +158,7 @@ class HomePageState extends State<HomePage> {
               funcao: () {
                 print("Abrir tela perfil");
               },
+              asset: 'assets/icon/bottom_appbar_perfil_icon.png',
             ),
           ],
         ),
@@ -155,9 +174,10 @@ class BottomAppBarButton extends StatelessWidget {
     super.key, 
     required this.text, 
     required this.icone, 
-    required this.funcao,
+    required this.funcao, 
+    required this.asset,
   });
-
+  final String asset;
   final String text;
   final IconData icone;
   final VoidCallback funcao;
@@ -169,14 +189,18 @@ class BottomAppBarButton extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icone),
+          Image.asset(
+            asset,
+            width: 36,
+            height: 36,
+          ),
           Text(
             text,
             style: TextStyle(
               fontSize: 14.0,
               color: AppController.instance.isDarkTheme 
               ? Color(0xFF3535B5)
-              : Color(0xFFFB5B4D),
+              : Color(0xFF01017D), //light theme
               ),
           ),
         ],

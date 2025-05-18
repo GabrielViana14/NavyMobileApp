@@ -3,6 +3,6 @@ import 'app.dart';
 
 
 void main(){
-  runApp(App());
+  runApp(App(logado: false,));
 }
 
