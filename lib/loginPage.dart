@@ -113,6 +113,7 @@ class LoginPageState extends State<LoginPage> {
                             if( usuario.trim() == "teste" && senha.trim() == 'teste'){
                               print('correto');
                               AppController.instance.logar();
+                              Navigator.of(context).pushNamed('/main');
                             }else{
                               print('Incorreto');
                               ScaffoldMessenger.of(context).showSnackBar(

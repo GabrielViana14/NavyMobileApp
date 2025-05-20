@@ -1,18 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_test/loginPage.dart';
 import 'app_controller.dart';
-import 'homePage.dart';
+import 'mainPage.dart';
 
 // StatelessWidget são paginas estaticas
 class App extends StatelessWidget{
-  const App({
-    super.key, 
-    required this.logado
-    });
+  const App({super.key, required this.logado});
 
   //'final' são variáveis que não podem ser alteradas 
   //depois de serem inicializadas
-  final bool logado;
+  final bool logado ;
   
   @override
   Widget build(BuildContext context) {
@@ -82,7 +79,11 @@ class App extends StatelessWidget{
         ),
 
       ),
-      home: AppController.instance.logado ? HomePage() : LoginPage(),
+      initialRoute:  AppController.instance.logado ? '/main' : '/login',
+      routes: {
+        '/main' : (context) => MainPage(),
+        '/login' : (context) => LoginPage(),
+      },
     );
     },
     );
