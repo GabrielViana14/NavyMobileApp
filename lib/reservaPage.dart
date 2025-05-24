@@ -10,6 +10,12 @@ class ReservaPage extends StatefulWidget {
 class _ReservaPageState extends State<ReservaPage> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return const Column(
+      children: [
+        SizedBox(
+          child: Text('Reserva'),
+        )
+      ],
+    );
   }
 }
