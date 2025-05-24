@@ -166,6 +166,7 @@ class LoginPageState extends State<LoginPage> {
                         GestureDetector(
                           onTap: () {
                             print('abrir tela de cadastro');
+                            Navigator.of(context).pushNamed('/cadastro');
                           },
                           child: Container(
                             width: double.infinity,

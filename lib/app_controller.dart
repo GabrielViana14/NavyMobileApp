@@ -6,17 +6,17 @@ class AppController extends ChangeNotifier{
 
   bool isDarkTheme = false;
 
-  bool _logado = false;
-  bool get logado => _logado;
+  bool logado = false;
+  //bool get logado => _logado;
 
 
-  void logar() {
-    _logado = true;
+  logar() {
+    logado = true;
     notifyListeners();
   }
 
-  void deslogar() {
-    _logado = false;
+  deslogar() {
+    logado = false;
     notifyListeners();
   }
   

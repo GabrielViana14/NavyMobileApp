@@ -77,7 +77,7 @@ class _PerfilPageState extends State<PerfilPage> {
                         Text(
                           "Configuração de Conta",
                           style: TextStyle(
-                            fontWeight: FontWeight.w200,
+                            fontWeight: FontWeight.w300,
                             fontSize: 16
                           ),
                         ),
@@ -102,7 +102,7 @@ class _PerfilPageState extends State<PerfilPage> {
                         Text(
                           "Configuração de notificação",
                           style: TextStyle(
-                            fontWeight: FontWeight.w200,
+                            fontWeight: FontWeight.w300,
                             fontSize: 16
                           ),
                         ),
@@ -127,7 +127,7 @@ class _PerfilPageState extends State<PerfilPage> {
                         Text(
                           "Feedback",
                           style: TextStyle(
-                            fontWeight: FontWeight.w200,
+                            fontWeight: FontWeight.w300,
                             fontSize: 16
                           ),
                         ),
@@ -179,7 +179,7 @@ class _PerfilPageState extends State<PerfilPage> {
                         Text(
                           "Sobre nós",
                           style: TextStyle(
-                            fontWeight: FontWeight.w200,
+                            fontWeight: FontWeight.w300,
                             fontSize: 16
                           ),
                         ),
@@ -204,7 +204,7 @@ class _PerfilPageState extends State<PerfilPage> {
                         Text(
                           "Perguntas Frequentes",
                           style: TextStyle(
-                            fontWeight: FontWeight.w200,
+                            fontWeight: FontWeight.w300,
                             fontSize: 16
                           ),
                         ),
@@ -222,6 +222,7 @@ class _PerfilPageState extends State<PerfilPage> {
               onTap: (){
                 print("Fazendo logoff");
                 AppController.instance.deslogar();
+                Navigator.of(context).pushReplacementNamed('/login');
               },
               child: Container(
                 width: double.infinity,

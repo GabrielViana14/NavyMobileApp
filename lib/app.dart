@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_test/cadastroPage.dart';
 import 'package:flutter_application_test/loginPage.dart';
 import 'app_controller.dart';
 import 'mainPage.dart';
@@ -83,6 +84,7 @@ class App extends StatelessWidget{
       routes: {
         '/main' : (context) => MainPage(),
         '/login' : (context) => LoginPage(),
+        '/cadastro': (context) => cadastroPage(),
       },
     );
     },

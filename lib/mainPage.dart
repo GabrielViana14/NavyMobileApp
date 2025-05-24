@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_test/homePage.dart';
-import 'package:flutter_application_test/mapaPage.dart';
-import 'package:flutter_application_test/perfilPage.dart';
-import 'package:flutter_application_test/reservaPage.dart';
+import 'package:flutter_application_test/tab_main/homePage.dart';
+import 'package:flutter_application_test/tab_main/mapaPage.dart';
+import 'package:flutter_application_test/tab_main/perfilPage.dart';
+import 'package:flutter_application_test/tab_main/reservaPage.dart';
 import 'app_controller.dart';
 
 
