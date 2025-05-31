@@ -1,245 +1,181 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_test/enderecoPage.dart';
 
-class cadastroPage extends StatefulWidget {
-  const cadastroPage({super.key});
+/*void main() {
+  runApp(MaterialApp(
+    home: CadastroPage(),
+    debugShowCheckedModeBanner: false,
+  ));
+}*/
 
+class CadastroPage extends StatefulWidget {
   @override
-  State<cadastroPage> createState() => _cadastroPageState();
+  _CadastroPageState createState() => _CadastroPageState();
 }
 
-class _cadastroPageState extends State<cadastroPage> {
+class _CadastroPageState extends State<CadastroPage> {
+  String? _sexoSelecionado;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      
-      resizeToAvoidBottomInset: true,
-      body: Stack(
-        children: [
-          // Fundo branco
-          Container(color: Colors.white),
-
-          // Gradiente com conteúdo
-          SizedBox.expand(
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                   Colors.black
-                  ],
-                  stops: [0.0, 0.15, 0.28, 0.78],
-                ),
+      appBar: AppBar(),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Botão voltar
+              IconButton(
+                icon: Icon(Icons.arrow_back, color: Colors.red),
+                onPressed: () {
+                  // ação de voltar
+                },
               ),
-              child: SingleChildScrollView(
+
+              Center(
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: 20),
-                    child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  SizedBox(
-                    height: 150,
-                  ),
-                  Container(
-                    width: 350,
-                    height: 400,
-                    padding: EdgeInsets.all(16.0),
-                    decoration: BoxDecoration(
-                      //color: Color(0xBDFFFFFF),
-                      borderRadius: BorderRadius.circular(15)
+                    Text(
+                      'CADASTRO',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.blueGrey,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
-                    child: Column(
+                    SizedBox(height: 12),
+                    // Indicador de progresso
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        TextField(
-                          onChanged: (value) {
-                            var nome = value;
-                          },
-                          keyboardType: TextInputType.emailAddress,
-                          decoration: InputDecoration(
-                            hintText: 'Nome Completo*',
-                            hintStyle: TextStyle(
-                              fontSize: 20,
-                              color: Color(0x8001017D),
-                              fontWeight: FontWeight.w300,
-                            ),
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Color(0xFF01017D),
-                                width: 2.0
-                              )
-                            )
+                        Container(
+                          width: 20,
+                          height: 20,
+                          decoration: BoxDecoration(
+                            color: Colors.red,
+                            shape: BoxShape.circle,
                           ),
                         ),
-                        SizedBox(
-                          height: 10.0,
+                        Container(
+                          width: 40,
+                          height: 6,
+                          color: Colors.blue,
                         ),
-                        TextField(
-                          onChanged: (value) {
-                            var cpf = value;
-                          },
-                          obscureText: true,
-                          decoration: InputDecoration(
-                            hintText: 'CPF*',
-                            hintStyle: TextStyle(
-                              fontSize: 20,
-                              color: Color(0x8001017D),
-                              fontWeight: FontWeight.w300,
-                            ),
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Color(0xFF01017D),
-                                width: 2.0
-                              )
-                            )
-                          ),
-                        ),
-                        SizedBox(
-                          height: 10.0,
-                        ),
-                        TextField(
-                          onChanged: (value) {
-                            var rg = value;
-                          },
-                          obscureText: true,
-                          decoration: InputDecoration(
-                            hintText: 'RG*',
-                            hintStyle: TextStyle(
-                              fontSize: 20,
-                              color: Color(0x8001017D),
-                              fontWeight: FontWeight.w300,
-                            ),
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Color(0xFF01017D),
-                                width: 2.0
-                              )
-                            )
-                          ),
-                        ),
-                        SizedBox(
-                          height: 40.0,
-                        ),
-                        GestureDetector(
-                         /* onTap: () {
-                            if( usuario.trim() == "teste" && senha.trim() == 'teste'){
-                              print('correto');
-                              AppController.instance.logar();
-                              Navigator.of(context).pushNamed('/main');
-                            }else{
-                              print('Incorreto');
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text("Usuário ou senha incorretos"),
-                                  backgroundColor: Colors.red,
-                                ),
-                              );
-                            }
-                          },*/
-                          child: Container(
-                            width: double.infinity,
-                            height: 40,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: Color(0xFFE35245),
-                              borderRadius: BorderRadius.circular(25.0)
-                            ),
-                            child: Text(
-                              "PROXIMO PASSO",
-                              style: TextStyle(
-                                fontSize: 26.0,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 20.0,
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            print('abrir tela de lembrar senha');
-                          },
-                          child: Text(
-                            'Esqueci minha senha',
-                            style: TextStyle(
-                                fontSize: 20.0,
-                                color: Color(0xFFFB5B4D),
-                                fontWeight: FontWeight.w300,
-                                decoration: TextDecoration.underline,
-                                decorationColor: Color(0xFFFB5B4D)
-                              ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 20.0,
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.of(context).pushNamed('/cadastro');
-                            print('abrir tela de cadastro');
-                          },
-                          child: Container(
-                            width: double.infinity,
-                            height: 30,
-                            margin: EdgeInsets.symmetric(horizontal: 60.0),
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: Color(0xFF413ED6),
-                              borderRadius: BorderRadius.circular(25.0)
-                            ),
-                            child: Text(
-                              "Cadastre-se",
-                              style: TextStyle(
-                                fontSize: 18.0,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        )
+                        _buildStepIndicator(false),
+                        _buildStepIndicator(false),
                       ],
                     ),
-                  ),
-                  SizedBox(
-                    height: 130,
-                  ),
-                  Image.asset(
-                    'assets/logo/logo_navy_branco.png',
-                    width: 200.0,
-                    height: 200.0,
-                  ),
+                  ],
+                ),
+              ),
+
+              SizedBox(height: 40),
+
+              // Campos de texto
+              _buildTextField("Nome Completo"),
+              _buildTextField("CPF"),
+              _buildTextField("RG"),
+
+              SizedBox(height: 24),
+
+              Text(
+                "Sexo Biológico *",
+                style: TextStyle(color: Colors.blueGrey),
+              ),
+              Row(
+                children: [
+                  _buildRadio("Feminino"),
+                  SizedBox(width: 20),
+                  _buildRadio("Masculino"),
                 ],
-              ), 
-                  )
-        ]
-        ),
-              )
-            ),
+              ),
+
+              Spacer(),
+
+              // Botão "Próximo passo"
+              SizedBox(
+                width: double.infinity,
+                child:GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => EnderecoPage()),
+                    );
+                  },
+                      child: Container(
+                        width: double.infinity,
+                        padding: EdgeInsets.symmetric(vertical: 16),
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        child: Center(
+                          child: Text(
+                            "PRÓXIMO PASSO",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+
+              ),
+            ],
           ),
-        ],
+        ),
       ),
-
-
-
-
-
-      );
-      
-
-    
-    
-    
-    
-    
-    
-    
-    
-  
+    );
   }
 
+  Widget _buildTextField(String label) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16.0),
+      child: TextField(
+        decoration: InputDecoration(
+          labelText: label + " *",
+          labelStyle: TextStyle(color: Colors.blueGrey),
+          enabledBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: Colors.indigo, width: 2),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRadio(String label) {
+    return Row(
+      children: [
+        Radio<String>(
+          value: label,
+          groupValue: _sexoSelecionado,
+          onChanged: (value) {
+            setState(() {
+              _sexoSelecionado = value;
+            });
+          },
+          activeColor: Colors.red,
+        ),
+        Text(label),
+      ],
+    );
+  }
+
+  Widget _buildStepIndicator(bool isActive) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: Container(
+        width: 20,
+        height: 20,
+        decoration: BoxDecoration(
+          color: isActive ? Colors.red : Colors.grey,
+          shape: BoxShape.circle,
+        ),
+      ),
+    );
+  }
 }
