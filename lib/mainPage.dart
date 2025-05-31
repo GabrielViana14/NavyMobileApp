@@ -35,7 +35,7 @@ class MainPageState extends State<MainPage> {
     return Scaffold(
       // Ver linhas do layout: >flutter debug painter
 
-      
+      /*
       appBar: AppBar(
         title: Text(
           AppController.instance.isDarkTheme 
@@ -51,7 +51,7 @@ class MainPageState extends State<MainPage> {
         ],
 
       ),
-      
+      */
 
       body: IndexedStack(
         index: _paginaSelecionada,

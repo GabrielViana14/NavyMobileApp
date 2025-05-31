@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_test/cadastroPage.dart';
+import 'package:flutter_application_test/editPage.dart';
 import 'package:flutter_application_test/loginPage.dart';
 import 'app_controller.dart';
 import 'mainPage.dart';
@@ -85,6 +86,7 @@ class App extends StatelessWidget{
         '/main' : (context) => MainPage(),
         '/login' : (context) => LoginPage(),
         '/cadastro': (context) => cadastroPage(),
+        '/edit': (context) => EditPage(),
       },
     );
     },
