@@ -146,6 +146,9 @@ class _EditPageState extends State<EditPage> {
                     TextField(),
                     Text('Numero:'),
                     TextField(),
+                    SizedBox(
+                      height: 5,
+                    ),
                     Text('Logradouro:'),
                     TextField(),
                   ],
