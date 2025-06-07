@@ -19,7 +19,6 @@ class _CadastroPageState extends State<CadastroPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(24.0),
@@ -31,6 +30,7 @@ class _CadastroPageState extends State<CadastroPage> {
                 icon: Icon(Icons.arrow_back, color: Colors.red),
                 onPressed: () {
                   // ação de voltar
+                  Navigator.of(context).pop();
                 },
               ),
 

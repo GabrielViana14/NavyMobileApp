@@ -69,6 +69,7 @@ class MainPageState extends State<MainPage> {
       */
 
       bottomNavigationBar: BottomAppBar(
+        height: kBottomNavigationBarHeight + 40,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
@@ -79,6 +80,7 @@ class MainPageState extends State<MainPage> {
                 setState(() => _paginaSelecionada = 0);
               },
               asset: 'assets/icon/bottom_appbar_home_icon.png',
+              selecionado: _paginaSelecionada == 0,
             ),
             Container(
               width: 3,
@@ -92,6 +94,7 @@ class MainPageState extends State<MainPage> {
                 setState(() => _paginaSelecionada = 1);
               },
               asset: 'assets/icon/bottom_appbar_map_icon.png',
+              selecionado: _paginaSelecionada == 1,
             ),
             Container(
               width: 3,
@@ -105,6 +108,7 @@ class MainPageState extends State<MainPage> {
                 setState(() => _paginaSelecionada = 2);
               },
               asset: 'assets/icon/bottom_appbar_reservas_icon.png',
+              selecionado: _paginaSelecionada == 2,
             ),
             Container(
               width: 3,
@@ -118,6 +122,7 @@ class MainPageState extends State<MainPage> {
                 setState(() => _paginaSelecionada = 3);
               },
               asset: 'assets/icon/bottom_appbar_perfil_icon.png',
+              selecionado: _paginaSelecionada == 3,
             ),
           ],
         ),
@@ -134,36 +139,53 @@ class BottomAppBarButton extends StatelessWidget {
     required this.text, 
     required this.icone, 
     required this.funcao, 
-    required this.asset,
+    required this.asset, required this.selecionado,
   });
   final String asset;
   final String text;
   final IconData icone;
   final VoidCallback funcao;
+  final bool selecionado;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: funcao,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Image.asset(
-            asset,
-            width: 36,
-            height: 36,
-          ),
-          Text(
-            text,
-            style: TextStyle(
-              fontSize: 14.0,
-              color: AppController.instance.isDarkTheme 
-              ? Color(0xFF3535B5)
-              : Color(0xFF01017D), //light theme
-              ),
-          ),
-        ],
-      ),
+      child: TweenAnimationBuilder(
+        tween: Tween<double>(
+          begin: 0,
+          end: selecionado ? -10 : 0,
+        ), 
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut, 
+        builder: (context, value, child){
+          return Transform.translate(
+            offset: Offset(0, value),
+            child: Column(
+              children: [
+                AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 300),
+                  child: Image.asset(
+                    asset,
+                    key: ValueKey('$asset$selecionado'),
+                    width: selecionado ? 42 : 36,
+                    height: selecionado ? 42 : 36,
+                    color: selecionado ? Color(0xFF01017D) : Color(0xFF3535B5),
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  text,
+                  style: TextStyle(
+                    fontSize: 14.0,
+                    color: Color(0xFF01017D)
+                    ),
+                ), 
+              ],
+            )
+            );
+        }
+        )
     );
   }
 }
