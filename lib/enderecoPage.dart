@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_test/cadastroFinalPage.dart';
 
 class EnderecoPage extends StatefulWidget {
   @override
@@ -71,21 +72,35 @@ class _EnderecoPageState extends State<EnderecoPage> {
               Spacer(),
 
               // Botões
-              SizedBox(
+            SizedBox(
                 width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () {
-                    // Avançar para próxima etapa
+                child:GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => CadastroFinalPage() ),
+                    );
                   },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
+                      child: Container(
+                        width: double.infinity,
+                        padding: EdgeInsets.symmetric(vertical: 16),
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        child: Center(
+                          child: Text(
+                            "PRÓXIMO PASSO",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
-                    padding: EdgeInsets.symmetric(vertical: 16),
-                  ),
-                  child: Text("PRÓXIMO PASSO", style: TextStyle(color: Colors.white)),
-                ),
+
               ),
               SizedBox(height: 12),
             ],
