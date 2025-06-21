@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_test/app_controller.dart';
+import 'package:flutter_application_test/service/api_service.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -89,7 +90,7 @@ class LoginPageState extends State<LoginPage> {
                           onChanged: (value) {
                             senha = value;
                           },
-                          obscureText: true,
+                          obscureText: false,
                           decoration: InputDecoration(
                             hintText: 'Senha',
                             hintStyle: TextStyle(
@@ -109,13 +110,17 @@ class LoginPageState extends State<LoginPage> {
                           height: 40.0,
                         ),
                         GestureDetector(
-                          onTap: () {
-                            if( usuario.trim() == "teste" && senha.trim() == 'teste'){
-                              print('correto');
-                              AppController.instance.logar();
-                              Navigator.of(context).pushNamed('/main');
-                            }else{
-                              print('Incorreto');
+                          onTap: () async {
+                            try {
+                              print('iniciando login... usuario: ${usuario.trim()} - senha: ${senha.trim()} ');
+                              final token = await ApiService.loginUsuario(usuario.trim(), senha.trim());
+                              print('Token recebido: $token');  // <-- imprime o token recebido no console
+                              if (token != null){
+                                AppController.instance.logar();
+                                Navigator.of(context).pushNamed('/main');
+                              }
+                            } catch (e) {
+                              print('Erro no login: $e');
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content: Text("Usuário ou senha incorretos"),
