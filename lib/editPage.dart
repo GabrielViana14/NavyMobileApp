@@ -39,7 +39,7 @@ class _EditPageState extends State<EditPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              '../assets/placeholders/avatar.png',
+              'assets/placeholders/avatar.png',
                 width: 150,
                 height: 150,
             ),
@@ -79,7 +79,7 @@ class _EditPageState extends State<EditPage> {
                   BoxShadow(
                     color: Colors.black.withOpacity(0.4),
                     blurRadius: 8,
-                    offset: Offset(6, 7), // deslocamento da sombra
+                    offset: Offset(2, 4), // deslocamento da sombra
                   ),
                 ],
               ),
@@ -115,7 +115,7 @@ class _EditPageState extends State<EditPage> {
                   BoxShadow(
                     color: Colors.black.withOpacity(0.4),
                     blurRadius: 8,
-                    offset: Offset(6, 7), // deslocamento da sombra
+                    offset: Offset(2, 4), // deslocamento da sombra
                   ),
                 ],
               ),
@@ -173,7 +173,7 @@ class _EditPageState extends State<EditPage> {
                   BoxShadow(
                     color: Colors.black.withOpacity(0.4),
                     blurRadius: 8,
-                    offset: Offset(6, 7), // deslocamento da sombra
+                    offset: Offset(2, 4), // deslocamento da sombra
                   ),
                 ],
               ),
@@ -276,7 +276,7 @@ class CustomTextField extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [BoxShadow(
-          color: Colors.black.withValues(alpha: (0.025 * 255.0).toDouble()),
+          color: Colors.black.withValues(alpha: (0.0025 * 255.0).toDouble()),
           blurRadius: 8,
           offset: Offset(2, 4),
         )],  
@@ -309,7 +309,7 @@ class CPFTextField extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [BoxShadow(
-          color: Colors.black.withValues(alpha: (0.025 * 255.0).toDouble()),
+          color: Colors.black.withValues(alpha: (0.0025 * 255.0).toDouble()),
           blurRadius: 8,
           offset: Offset(2, 4),
         )],  
@@ -345,7 +345,7 @@ class RGTextField extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [BoxShadow(
-          color: Colors.black.withValues(alpha: (0.025 * 255.0).toDouble()),
+          color: Colors.black.withValues(alpha: (0.0025 * 255.0).toDouble()),
           blurRadius: 8,
           offset: Offset(2, 4),
         )],  

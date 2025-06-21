@@ -24,6 +24,14 @@ class HomePageState extends State<HomePage> {
     });
   }
 
+
+  double parsePreco(dynamic value) {
+  if (value is int) return value.toDouble();
+  if (value is double) return value;
+  if (value is String) return double.tryParse(value) ?? 0.0;
+  return 0.0;
+}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,7 +58,7 @@ class HomePageState extends State<HomePage> {
                 titulo: carro['model'] ?? 'Desconhecida', 
                 informacoes: carro['short_description'] ?? 'Desconhecida', 
                 anoKilo: '${carro['year'] ?? '----'} - ${carro['mileage'] ?? 0}KM', 
-                preco: double.tryParse(carro['price_per_hour'].toString()) ?? 0.0
+                preco: double.tryParse((carro['price_per_hour'] ?? carro['price'] ?? 0).toString()) ?? 0.0,
                 );
             }
             );
