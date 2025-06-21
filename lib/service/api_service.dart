@@ -47,4 +47,32 @@ class ApiService {
       throw Exception('Erro ao fazer login: ${response.statusCode}');
     }
   }
+
+  //receber lista com todos os carros
+  static Future<List<dynamic>> getCarros() async {
+  final token = await getToken();
+  final url = Uri.parse('https://navy-backend.onrender.com/api/cars/');
+
+  final response = await http.get(
+    url,
+    headers: {
+      'Authorization': 'Bearer $token',
+      'Content-Type': 'application/json',
+    },
+  );
+
+  print('GET /cars/: ${response.body}');
+
+  if (response.statusCode == 200) {
+    final List<dynamic> jsonList = jsonDecode(response.body);
+    return jsonList;
+  } else {
+    throw Exception('Erro ao buscar carros: ${response.statusCode}');
+  }
+}
+
+
+
+
+
 }

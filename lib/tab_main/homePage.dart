@@ -1,70 +1,61 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_test/service/api_service.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<HomePage> createState() => HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class HomePageState extends State<HomePage> {
+  late Future<List<dynamic>> _carros;
+
+  // Assim que abrir a tela vai procurar os carros
+  @override
+  void initState() {
+    super.initState();
+    _carros = ApiService.getCarros();
+  }
+
+  void recarregarCarros() {
+    setState(() {
+      _carros = ApiService.getCarros();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView(
-          scrollDirection: Axis.vertical,
-          children: [
-            ListViewCarItem(
-              marca: "Renault",
-              titulo: "Renault chevete",
-              informacoes: "infos vazadas", 
-              anoKilo: '2003 - 0 KM', 
-              preco: 1000.00,
-            ),
-            ListViewCarItem(
-              marca: "Renault",
-              titulo: "Renault chevete",
-              informacoes: "infos vazadas", 
-              anoKilo: '2003 - 0 KM', 
-              preco: 1000.00,
-            ),
-            ListViewCarItem(
-              marca: "Renault",
-              titulo: "Renault chevete",
-              informacoes: "infos vazadas", 
-              anoKilo: '2003 - 0 KM', 
-              preco: 1000.00,
-            ),
-            ListViewCarItem(
-              marca: "Renault",
-              titulo: "Renault chevete",
-              informacoes: "infos vazadas", 
-              anoKilo: '2003 - 0 KM', 
-              preco: 1000.00,
-            ),
-            ListViewCarItem(
-              marca: "Renault",
-              titulo: "Renault chevete",
-              informacoes: "infos vazadas", 
-              anoKilo: '2003 - 0 KM', 
-              preco: 1000.00,
-            ),
-            ListViewCarItem(
-              marca: "Renault",
-              titulo: "Renault chevete",
-              informacoes: "infos vazadas", 
-              anoKilo: '2003 - 0 KM', 
-              preco: 1000.00,
-            ),
-            ListViewCarItem(
-              marca: "Renault",
-              titulo: "Renault chevete",
-              informacoes: "infos vazadas", 
-              anoKilo: '2003 - 0 KM', 
-              preco: 1000.00,
-            ),
-          ],
-        ),
+      body: FutureBuilder<List<dynamic>>(
+        future: _carros, 
+        builder: (context, snapshot){
+          if(snapshot.connectionState == ConnectionState.waiting){
+            return Center(child: CircularProgressIndicator(),);
+          }
+
+          if (snapshot.hasError) {
+            return Center(child: Text('Erro ao carregar carros: ${snapshot.error}'));
+          }
+
+          final carros = snapshot.data!;
+
+          return ListView.builder(
+            itemCount: carros.length,
+            itemBuilder: (context, index){
+              final carro = carros[index];
+
+              return ListViewCarItem(
+                marca: carro['brand'] ?? 'Desconhecida', 
+                titulo: carro['model'] ?? 'Desconhecida', 
+                informacoes: carro['short_description'] ?? 'Desconhecida', 
+                anoKilo: '${carro['year'] ?? '----'} - ${carro['mileage'] ?? 0}KM', 
+                preco: double.tryParse(carro['price_per_hour'].toString()) ?? 0.0
+                );
+            }
+            );
+        }
+        )
     );
   }
 }
@@ -135,26 +126,31 @@ class ListViewCarItem extends StatelessWidget {
                       fontWeight: FontWeight.bold
                     ),
                   ),
-                  Text(
-                    titulo,
-                    maxLines: 3,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: 20.0,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold
-                    ),  
-                  ),
-                  Text(
-                    informacoes,
-                    maxLines: 3,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: 16.0,
-                      color: Colors.grey,
+                  Flexible(
+                      child: Text(
+                        titulo.length > 15 ? '${titulo.substring(0, 15)}...' : titulo,
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                  const SizedBox(height: 4),
+                  Flexible(
+                    child: Text(
+                      informacoes,
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 16.0,
+                        color: Colors.grey,
+                      ),
                     ),
                   ),
-                  
+                  const SizedBox(height: 4),
                   Text(
                     anoKilo,
                     maxLines: 3,

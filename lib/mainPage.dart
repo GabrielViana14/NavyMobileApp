@@ -6,8 +6,6 @@ import 'package:flutter_application_test/tab_main/reservaPage.dart';
 
 
 
-
-
 // StatelessWidget são paginas que podem ser alteradas enquanto rodam
 class MainPage extends StatefulWidget{
   const MainPage({super.key});
@@ -21,8 +19,11 @@ class MainPageState extends State<MainPage> {
   int contador = 0;
   int _paginaSelecionada = 0;
 
-  final List<Widget> _pages = [
-    HomePage(),
+  final GlobalKey<HomePageState> _homePageKey = GlobalKey<HomePageState>();
+  
+
+  List<Widget> get _pages => [
+    HomePage(key: _homePageKey),
     MapaPage(),
     ReservaPage(),
     PerfilPage(),
@@ -77,7 +78,13 @@ class MainPageState extends State<MainPage> {
               text: "Home",
               icone: Icons.home_outlined,
               funcao: () {
-                setState(() => _paginaSelecionada = 0);
+                setState((){
+                  _paginaSelecionada = 0;
+
+                   // força recarregar os carros
+                   _homePageKey.currentState?.recarregarCarros();
+                  
+                  });
               },
               asset: 'assets/icon/bottom_appbar_home_icon.png',
               selecionado: _paginaSelecionada == 0,
