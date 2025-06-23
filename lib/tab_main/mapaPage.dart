@@ -68,7 +68,11 @@ class MapaPageState extends State<MapaPage> {
               _mostrarInfo = true;
             });
           },
-          child: Icon(Icons.location_on, size: 40, color: Colors.red),
+          child: Image.asset(
+            'assets/icon/marker_navy_icon.png',
+            width: 40,
+            height: 40,
+          ),
         ),
       );
     }).toList();
@@ -128,7 +132,7 @@ class MapaPageState extends State<MapaPage> {
   Widget build(BuildContext context) {
 
     return Scaffold(
-      body: LatLng(-23.55052, -46.633308) == null // mudar para localização do usuario ->_userLocation!
+      body: _userLocation == null // mudar para localização do usuario ->_userLocation!
       ? const Center(child: CircularProgressIndicator())
       : Stack(
         children: [
