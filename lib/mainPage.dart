@@ -20,11 +20,12 @@ class MainPageState extends State<MainPage> {
   int _paginaSelecionada = 0;
 
   final GlobalKey<HomePageState> _homePageKey = GlobalKey<HomePageState>();
+  final GlobalKey<MapaPageState> _mapPageKey = GlobalKey<MapaPageState>();
   
 
   List<Widget> get _pages => [
     HomePage(key: _homePageKey),
-    MapaPage(),
+    MapaPage(key: _mapPageKey),
     ReservaPage(),
     PerfilPage(),
   ];
@@ -98,7 +99,10 @@ class MainPageState extends State<MainPage> {
               text: "Mapa",
               icone: Icons.map_outlined,
               funcao: () {
-                setState(() => _paginaSelecionada = 1);
+                setState(() {
+                  _paginaSelecionada = 1;
+                  _mapPageKey.currentState?.buscarCarros();
+                });
               },
               asset: 'assets/icon/bottom_appbar_map_icon.png',
               selecionado: _paginaSelecionada == 1,

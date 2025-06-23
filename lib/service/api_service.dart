@@ -1,3 +1,4 @@
+import 'package:flutter_application_test/models/carro_model.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -49,7 +50,7 @@ class ApiService {
   }
 
   //receber lista com todos os carros
-  static Future<List<dynamic>> getCarros() async {
+  static Future<List<CarroModel>> getCarros() async {
   final token = await getToken();
   final url = Uri.parse('https://navy-backend.onrender.com/api/cars/');
 
@@ -65,7 +66,7 @@ class ApiService {
 
   if (response.statusCode == 200) {
     final List<dynamic> jsonList = jsonDecode(response.body);
-    return jsonList;
+    return jsonList.map((json) => CarroModel.fromJson(json)).toList();
   } else {
     throw Exception('Erro ao buscar carros: ${response.statusCode}');
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_test/models/carro_model.dart';
 import 'package:flutter_application_test/service/api_service.dart';
 
 class HomePage extends StatefulWidget {
@@ -9,7 +10,7 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
-  late Future<List<dynamic>> _carros;
+  late Future<List<CarroModel>> _carros;
 
   // Assim que abrir a tela vai procurar os carros
   @override
@@ -54,11 +55,11 @@ class HomePageState extends State<HomePage> {
               final carro = carros[index];
 
               return ListViewCarItem(
-                marca: carro['brand'] ?? 'Desconhecida', 
-                titulo: carro['model'] ?? 'Desconhecida', 
-                informacoes: carro['short_description'] ?? 'Desconhecida', 
-                anoKilo: '${carro['year'] ?? '----'} - ${carro['mileage'] ?? 0}KM', 
-                preco: double.tryParse((carro['price_per_hour'] ?? carro['price'] ?? 0).toString()) ?? 0.0,
+                marca: carro.brand ?? 'Desconhecida', 
+                titulo: carro.model ?? 'Desconhecida', 
+                informacoes: carro.shortDescription ?? 'Desconhecida', 
+                anoKilo: '${carro.year ?? '----'} - ${carro.mileage ?? 0}KM', 
+                preco: double.tryParse((carro.pricePerHour ?? carro.price ?? 0).toString()) ?? 0.0,
                 );
             }
             );
