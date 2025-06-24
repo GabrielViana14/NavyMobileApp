@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_test/cadastroFinalpage.dart';
-import 'package:flutter_application_test/cadastroPage.dart';
 import 'package:flutter_application_test/editPage.dart';
-import 'package:flutter_application_test/enderecoPage.dart';
 import 'package:flutter_application_test/loginPage.dart';
 import 'app_controller.dart';
 import 'mainPage.dart';
