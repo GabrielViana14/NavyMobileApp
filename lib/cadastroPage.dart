@@ -1,20 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_test/enderecoPage.dart';
-
-/*void main() {
-  runApp(MaterialApp(
-    home: CadastroPage(),
-    debugShowCheckedModeBanner: false,
-  ));
-}*/
+import 'cadastro_model.dart';
+import 'enderecoPage.dart';
 
 class CadastroPage extends StatefulWidget {
+  final CadastroModel cadastro;
+  const CadastroPage({required this.cadastro});
+
   @override
-  _CadastroPageState createState() => _CadastroPageState();
+  State<CadastroPage> createState() => _CadastroPageState();
 }
 
 class _CadastroPageState extends State<CadastroPage> {
-  String? _sexoSelecionado;
+  final _formKey = GlobalKey<FormState>();
+  final nomeController = TextEditingController();
+  final cpfController = TextEditingController();
+  final rgController = TextEditingController();
+
+  String? sexoSelecionado;
+
+  String? _validaCampo(String? value) => value == null || value.isEmpty ? 'Campo obrigatório' : null;
 
   @override
   Widget build(BuildContext context) {
@@ -22,122 +26,100 @@ class _CadastroPageState extends State<CadastroPage> {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(24.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Botão voltar
-              IconButton(
-                icon: Icon(Icons.arrow_back, color: Colors.red),
-                onPressed: () {
-                  // ação de voltar
-                  Navigator.of(context).pop();
-                },
-              ),
-
-              Center(
-                child: Column(
-                  children: [
-                    Text(
-                      'CADASTRO',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.blueGrey,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    SizedBox(height: 12),
-                    // Indicador de progresso
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: 20,
-                          height: 20,
-                          decoration: BoxDecoration(
-                            color: Colors.red,
-                            shape: BoxShape.circle,
-                          ),
-                        ),
-                        Container(
-                          width: 40,
-                          height: 6,
-                          color: Colors.blue,
-                        ),
-                        _buildStepIndicator(false),
-                        _buildStepIndicator(false),
-                      ],
-                    ),
-                  ],
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                IconButton(
+                  icon: Icon(Icons.arrow_back, color: Colors.red),
+                  onPressed: () => Navigator.pop(context),
                 ),
-              ),
 
-              SizedBox(height: 40),
-
-              // Campos de texto
-              _buildTextField("Nome Completo"),
-              _buildTextField("CPF"),
-              _buildTextField("RG"),
-
-              SizedBox(height: 24),
-
-              Text(
-                "Sexo Biológico *",
-                style: TextStyle(color: Colors.blueGrey),
-              ),
-              Row(
-                children: [
-                  _buildRadio("Feminino"),
-                  SizedBox(width: 20),
-                  _buildRadio("Masculino"),
-                ],
-              ),
-
-              Spacer(),
-
-              // Botão "Próximo passo"
-              SizedBox(
-                width: double.infinity,
-                child:GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => EnderecoPage()),
-                    );
-                  },
-                      child: Container(
-                        width: double.infinity,
-                        padding: EdgeInsets.symmetric(vertical: 16),
-                        decoration: BoxDecoration(
-                          color: Colors.red,
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        child: Center(
-                          child: Text(
-                            "PRÓXIMO PASSO",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
+                Center(
+                  child: Column(
+                    children: [
+                      Text('CADASTRO', style: TextStyle(fontSize: 16, color: Colors.blueGrey, fontWeight: FontWeight.w500)),
+                      SizedBox(height: 12),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          _buildStepCircle(true),
+                          Container(width: 40, height: 6, color: Colors.grey),
+                          _buildStepCircle(false),
+                          Container(width: 40, height: 6, color: Colors.grey),
+                          _buildStepCircle(false),
+                        ],
                       ),
-                    ),
+                    ],
+                  ),
+                ),
 
-              ),
-            ],
+                SizedBox(height: 30),
+
+                _buildTextField(nomeController, "Nome"),
+                _buildTextField(cpfController, "CPF"),
+                _buildTextField(rgController, "RG"),
+                _buildSexoDropdown(),
+
+                Spacer(),
+
+                GestureDetector(
+                  onTap: () {
+                    if (_formKey.currentState!.validate()) {
+                      widget.cadastro.nome = nomeController.text;
+                      widget.cadastro.cpf = cpfController.text;
+                      widget.cadastro.rg = rgController.text;
+                      widget.cadastro.sexo = sexoSelecionado!;
+
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EnderecoPage(cadastro: widget.cadastro),
+                        ),
+                      );
+                    }
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.symmetric(vertical: 16),
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    child: Center(
+                      child: Text("Próximo Passo", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildTextField(String label) {
+  Widget _buildStepCircle(bool ativo) {
+    return Container(
+      width: 20,
+      height: 20,
+      margin: EdgeInsets.symmetric(horizontal: 4),
+      decoration: BoxDecoration(
+        color: ativo ? Colors.red : Colors.grey,
+        shape: BoxShape.circle,
+      ),
+    );
+  }
+
+  Widget _buildTextField(TextEditingController controller, String label) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
-      child: TextField(
+      child: TextFormField(
+        controller: controller,
+        validator: _validaCampo,
         decoration: InputDecoration(
-          labelText: label + " *",
+          labelText: "$label *",
           labelStyle: TextStyle(color: Colors.blueGrey),
           enabledBorder: UnderlineInputBorder(
             borderSide: BorderSide(color: Colors.indigo, width: 2),
@@ -147,34 +129,27 @@ class _CadastroPageState extends State<CadastroPage> {
     );
   }
 
-  Widget _buildRadio(String label) {
-    return Row(
-      children: [
-        Radio<String>(
-          value: label,
-          groupValue: _sexoSelecionado,
-          onChanged: (value) {
-            setState(() {
-              _sexoSelecionado = value;
-            });
-          },
-          activeColor: Colors.red,
-        ),
-        Text(label),
-      ],
-    );
-  }
-
-  Widget _buildStepIndicator(bool isActive) {
+  Widget _buildSexoDropdown() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      child: Container(
-        width: 20,
-        height: 20,
-        decoration: BoxDecoration(
-          color: isActive ? Colors.red : Colors.grey,
-          shape: BoxShape.circle,
+      padding: const EdgeInsets.only(bottom: 16.0),
+      child: DropdownButtonFormField<String>(
+        value: sexoSelecionado,
+        items: ['Masculino', 'Feminino']
+            .map((sexo) => DropdownMenuItem(value: sexo, child: Text(sexo)))
+            .toList(),
+        onChanged: (value) {
+          setState(() {
+            sexoSelecionado = value;
+          });
+        },
+        decoration: InputDecoration(
+          labelText: "Sexo *",
+          labelStyle: TextStyle(color: Colors.blueGrey),
+          enabledBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: Colors.indigo, width: 2),
+          ),
         ),
+        validator: (value) => value == null ? 'Selecione o sexo' : null,
       ),
     );
   }

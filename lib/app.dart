@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_test/cadastroFinalpage.dart';
 import 'package:flutter_application_test/cadastroPage.dart';
 import 'package:flutter_application_test/editPage.dart';
 import 'package:flutter_application_test/enderecoPage.dart';
@@ -86,9 +87,10 @@ class App extends StatelessWidget{
       routes: {
         '/main' : (context) => MainPage(),
         '/login' : (context) => LoginPage(),
-        '/cadastro': (context) => CadastroPage(),
+        //'/cadastro': (context) => CadastroPage(cadastro:,),
         '/edit': (context) => EditPage(),
-        '/endereco' : (context) => EnderecoPage(),
+        //'/endereco' : (context) => EnderecoPage(),
+        //'/finalCadastro' : (context) => CadastroFinalPage(),
       },
     );
     },

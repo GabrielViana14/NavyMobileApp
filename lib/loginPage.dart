@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_test/app_controller.dart';
 import 'package:flutter_application_test/service/api_service.dart';
+import 'cadastroPage.dart';
+import 'cadastro_model.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -171,7 +173,13 @@ class LoginPageState extends State<LoginPage> {
                         GestureDetector(
                           onTap: () {
                             print('abrir tela de cadastro');
-                            Navigator.of(context).pushNamed('/cadastro');
+                            //Navigator.of(context).pushNamed('/cadastro');
+                            Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CadastroPage(cadastro: CadastroModel()),
+                            ),
+                          );
                           },
                           child: Container(
                             width: double.infinity,
