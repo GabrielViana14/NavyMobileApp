@@ -177,7 +177,7 @@ class LoginPageState extends State<LoginPage> {
                             Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => CadastroPage(cadastro: CadastroModel()),
+                              builder: (context) => CadastroPage(),
                             ),
                           );
                           },

@@ -1,35 +1,49 @@
-import 'dart:io';
-
 class CadastroModel {
-  String nome = '';
-  String cpf = '';
-  String rg = '';
-  String sexo = '';
-  String cep = '';
-  String uf = '';
-  String cidade = '';
-  String rua = '';
-  String numero = '';
-  String bairro = '';
-  String complemento = '';
-  String email = '';
-  String senha = '';
-  File? fotoUsuario;
-  File? fotoCnh;
+  // Página 1
+  String nome;
+  String cpf;
+  String telefone;
+  String dataNascimento;
+  String sexo;
 
-  Map<String, String> toFields() {
+  // Página 2
+  String cep;
+  String rua;
+  String numero;
+  String bairro;
+  String cidade;
+  String estado;
+  String? complemento;
+
+  CadastroModel({
+    required this.nome,
+    required this.cpf,
+    required this.telefone,
+    required this.dataNascimento,
+    required this.sexo,
+    required this.cep,
+    required this.rua,
+    required this.numero,
+    required this.bairro,
+    required this.cidade,
+    required this.estado,
+    this.complemento,
+  });
+
+  Map<String, dynamic> toJsonComEmailSenha(String email, String senha) {
     return {
       'nome': nome,
       'cpf': cpf,
-      'rg': rg,
+      'telefone': telefone,
+      'dataNascimento': dataNascimento,
       'sexo': sexo,
       'cep': cep,
-      'uf': uf,
-      'cidade': cidade,
       'rua': rua,
       'numero': numero,
       'bairro': bairro,
-      'complemento': complemento,
+      'cidade': cidade,
+      'estado': estado,
+      'complemento': complemento ?? '',
       'email': email,
       'senha': senha,
     };
