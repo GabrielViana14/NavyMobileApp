@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'cadastro_model.dart';
 import 'cadastroFinalPage.dart';
+import 'cadastro_model.dart';
 
 class EnderecoPage extends StatefulWidget {
   final CadastroModel cadastro;
@@ -13,86 +13,123 @@ class EnderecoPage extends StatefulWidget {
 class _EnderecoPageState extends State<EnderecoPage> {
   final _formKey = GlobalKey<FormState>();
   final _cepController = TextEditingController();
+  final _ufController = TextEditingController();
+  final _cidadeController = TextEditingController();
   final _ruaController = TextEditingController();
   final _numeroController = TextEditingController();
-  final _estadoController = TextEditingController();
-  final _cidadeController = TextEditingController();
+  final _bairroController = TextEditingController();
+  final _complementoController = TextEditingController();
 
-  String? validarCEP(String? value) {
-    if (value == null || value.isEmpty) return 'CEP obrigatório';
-    if (!RegExp(r'^\d{5}-?\d{3}$').hasMatch(value)) return 'CEP inválido';
+  String? _validarObrigatorio(String? value) {
+    if (value == null || value.isEmpty) return 'Campo obrigatório';
     return null;
   }
 
-  void _finalizar() {
+  String? _validarCep(String? value) {
+    if (value == null || !RegExp(r'^\d{5}-?\d{3}$').hasMatch(value)) return 'CEP inválido';
+    return null;
+  }
+
+  void _irParaFinal() {
     if (_formKey.currentState!.validate()) {
-      final cadastro = widget.cadastro.copyWith(
+      final atualizado = widget.cadastro.copyWithEndereco(
         cep: _cepController.text,
+        estado: _ufController.text,
+        municipio: _cidadeController.text,
         rua: _ruaController.text,
         numero: _numeroController.text,
-        estado: _estadoController.text,
-        cidade: _cidadeController.text,
+        logradouro: _bairroController.text,
       );
-      Navigator.push(context, MaterialPageRoute(builder: (_) => CadastroFinalPage(cadastro: cadastro)));
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => CadastroFinalPage(cadastro: atualizado)),
+      );
     }
   }
 
-  Widget campo(String label, TextEditingController controller, {TextInputType? tipo, String? Function(String?)? validator}) {
+  Widget _campo(String label, TextEditingController controller,
+      {TextInputType tipo = TextInputType.text, String? Function(String?)? validator}) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.symmetric(vertical: 6),
       child: TextFormField(
         controller: controller,
-        validator: validator,
+        validator: validator ?? _validarObrigatorio,
         keyboardType: tipo,
         decoration: InputDecoration(
-          labelText: '$label *',
-          labelStyle: TextStyle(color: Colors.indigo),
-          enabledBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: Colors.indigo, width: 2),
-          ),
+          labelText: label,
+          labelStyle: TextStyle(color: Colors.white),
+          enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white)),
         ),
+        style: TextStyle(color: Colors.white),
       ),
     );
   }
 
-  Widget etapas() => Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: List.generate(3, (i) => Padding(
-          padding: EdgeInsets.all(4),
-          child: CircleAvatar(radius: 8, backgroundColor: i <= 1 ? Colors.red : Colors.grey[300]),
-        )),
-      );
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xFFE3B6B6), Color(0xFF000080)],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
         child: Center(
-          child: ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: 500),
-            child: Padding(
-              padding: const EdgeInsets.all(24),
-              child: Form(
-                key: _formKey,
-                child: ListView(
-                  children: [
-                    Center(child: Text('CADASTRO - ETAPA 2', style: TextStyle(fontSize: 16, color: Colors.indigo))),
-                    etapas(),
-                    campo('CEP', _cepController, tipo: TextInputType.number, validator: validarCEP),
-                    campo('Rua', _ruaController),
-                    campo('Número', _numeroController),
-                    campo('Estado', _estadoController),
-                    campo('Município', _cidadeController),
-                    SizedBox(height: 24),
-                    GestureDetector(
-                      onTap: _finalizar,
-                      child: Container(
-                        padding: EdgeInsets.symmetric(vertical: 16),
-                        decoration: BoxDecoration(color: Colors.red, borderRadius: BorderRadius.circular(30)),
-                        child: Center(child: Text('Próximo passo', style: TextStyle(color: Colors.white))),
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(24),
+            child: Card(
+              color: Colors.white.withOpacity(0.1),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              child: Padding(
+                padding: const EdgeInsets.all(24),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      Text('Cadastro - Etapa 2', style: TextStyle(color: Colors.white, fontSize: 18)),
+                      SizedBox(height: 12),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: List.generate(3, (index) {
+                          return Container(
+                            margin: EdgeInsets.symmetric(horizontal: 4),
+                            width: 12,
+                            height: 12,
+                            decoration: BoxDecoration(
+                              color: Colors.red,
+                              shape: BoxShape.circle,
+                            ),
+                          );
+                        }),
                       ),
-                    )
-                  ],
+                      SizedBox(height: 24),
+                      _campo('CEP *', _cepController, validator: _validarCep),
+                      _campo('UF *', _ufController),
+                      _campo('Cidade *', _cidadeController),
+                      _campo('Rua *', _ruaController),
+                      _campo('Número *', _numeroController),
+                      _campo('Bairro *', _bairroController),
+                      _campo('Complemento', _complementoController, validator: (_) => null),
+                      SizedBox(height: 24),
+                      GestureDetector(
+                        onTap: _irParaFinal,
+                        child: Container(
+                          width: double.infinity,
+                          padding: EdgeInsets.symmetric(vertical: 16),
+                          decoration: BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          child: Center(
+                            child: Text('PRÓXIMO PASSO',
+                                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

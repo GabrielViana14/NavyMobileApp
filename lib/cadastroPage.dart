@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'cadastro_model.dart';
 import 'enderecoPage.dart';
+import 'cadastro_model.dart';
 
 class CadastroPage extends StatefulWidget {
-  const CadastroPage({Key? key}) : super(key: key);
+  const CadastroPage({super.key});
 
   @override
   State<CadastroPage> createState() => _CadastroPageState();
@@ -11,117 +11,134 @@ class CadastroPage extends StatefulWidget {
 
 class _CadastroPageState extends State<CadastroPage> {
   final _formKey = GlobalKey<FormState>();
-
   final _nomeController = TextEditingController();
-  final _telefoneController = TextEditingController();
-  final _rgController = TextEditingController();
   final _cpfController = TextEditingController();
+  final _rgController = TextEditingController();
+  final _telefoneController = TextEditingController();
 
-  String _sexoSelecionado = 'masculino';
+  String _sexoSelecionado = 'Masculino';
+
+  String? _validarCampoObrigatorio(String? value) {
+    if (value == null || value.isEmpty) return 'Campo obrigatório';
+    return null;
+  }
+
+  String? _validarCpf(String? value) {
+    if (value == null || value.length != 11) return 'CPF deve ter 11 dígitos';
+    return null;
+  }
 
   void _irParaEndereco() {
     if (_formKey.currentState!.validate()) {
       final cadastro = CadastroModel(
         nome: _nomeController.text,
-        telefone: _telefoneController.text,
-        rg: _rgController.text,
         cpf: _cpfController.text,
+        rg: _rgController.text,
         sexo: _sexoSelecionado,
-        cnh: '',
-        cep: '',
-        rua: '',
-        numero: '',
-        estado: '',
-        cidade: '',
+        telefone: _telefoneController.text,
       );
-      Navigator.push(context, MaterialPageRoute(builder: (_) => EnderecoPage(cadastro: cadastro)));
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => EnderecoPage(cadastro: cadastro)),
+      );
     }
   }
 
-  String? validarCPF(String? value) {
-    if (value == null || value.isEmpty) return 'CPF obrigatório';
-    if (!RegExp(r'^\d{11}$').hasMatch(value)) return 'CPF inválido';
-    return null;
-  }
-
-  String? validarTelefone(String? value) {
-    if (value == null || value.isEmpty) return 'Telefone obrigatório';
-    if (!RegExp(r'^\d{10,11}$').hasMatch(value)) return 'Telefone inválido';
-    return null;
-  }
-
-  Widget campo(String label, TextEditingController controller, {TextInputType? tipo, String? Function(String?)? validator}) {
+  Widget _campoTexto(String label, TextEditingController controller,
+      {TextInputType tipo = TextInputType.text, String? Function(String?)? validator}) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.symmetric(vertical: 6),
       child: TextFormField(
         controller: controller,
-        validator: validator,
         keyboardType: tipo,
+        validator: validator ?? _validarCampoObrigatorio,
         decoration: InputDecoration(
-          labelText: '$label *',
-          labelStyle: TextStyle(color: Colors.indigo),
+          labelText: label,
+          labelStyle: TextStyle(color: Colors.white),
           enabledBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: Colors.indigo, width: 2),
-          ),
+              borderSide: BorderSide(color: Colors.white)),
         ),
+        style: TextStyle(color: Colors.white),
       ),
     );
   }
 
-  Widget etapas() => Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: List.generate(3, (i) => Padding(
-          padding: EdgeInsets.all(4),
-          child: CircleAvatar(radius: 8, backgroundColor: i == 0 ? Colors.red : Colors.grey[300]),
-        )),
-      );
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xFFE3B6B6), Color(0xFF000080)],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
         child: Center(
-          child: ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: 500),
-            child: Padding(
-              padding: const EdgeInsets.all(24),
-              child: Form(
-                key: _formKey,
-                child: ListView(
-                  children: [
-                    Row(
-                      children: [
-                        IconButton(
-                          icon: Icon(Icons.arrow_back, color: Colors.red),
-                          onPressed: () => Navigator.of(context).pop(),
-                        ),
-                        Expanded(
-                          child: Center(child: Text('CADASTRO - ETAPA 1', style: TextStyle(fontSize: 16, color: Colors.indigo))),
-                        ),
-                        SizedBox(width: 48),
-                      ],
-                    ),
-                    etapas(),
-                    campo('Nome completo', _nomeController),
-                    campo('Telefone', _telefoneController, tipo: TextInputType.phone, validator: validarTelefone),
-                    campo('RG', _rgController),
-                    campo('CPF', _cpfController, tipo: TextInputType.number, validator: validarCPF),
-                    DropdownButtonFormField(
-                      value: _sexoSelecionado,
-                      items: ['masculino', 'feminino'].map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(),
-                      onChanged: (v) => setState(() => _sexoSelecionado = v!),
-                      decoration: InputDecoration(labelText: 'Sexo *', labelStyle: TextStyle(color: Colors.indigo)),
-                    ),
-                    SizedBox(height: 24),
-                    GestureDetector(
-                      onTap: _irParaEndereco,
-                      child: Container(
-                        padding: EdgeInsets.symmetric(vertical: 16),
-                        decoration: BoxDecoration(color: Colors.red, borderRadius: BorderRadius.circular(30)),
-                        child: Center(child: Text('Próximo passo', style: TextStyle(color: Colors.white))),
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(24),
+            child: Card(
+              color: Colors.white.withOpacity(0.1),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              child: Padding(
+                padding: const EdgeInsets.all(24),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      Text('Cadastro - Etapa 1', style: TextStyle(color: Colors.white, fontSize: 18)),
+                      SizedBox(height: 12),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: List.generate(3, (index) {
+                          return Container(
+                            margin: EdgeInsets.symmetric(horizontal: 4),
+                            width: 12,
+                            height: 12,
+                            decoration: BoxDecoration(
+                              color: Colors.red,
+                              shape: BoxShape.circle,
+                            ),
+                          );
+                        }),
                       ),
-                    )
-                  ],
+                      SizedBox(height: 24),
+                      _campoTexto('Nome completo *', _nomeController),
+                      _campoTexto('CPF *', _cpfController, tipo: TextInputType.number, validator: _validarCpf),
+                      _campoTexto('RG *', _rgController),
+                      _campoTexto('Telefone *', _telefoneController, tipo: TextInputType.phone),
+                      SizedBox(height: 12),
+                      DropdownButtonFormField<String>(
+                        value: _sexoSelecionado,
+                        decoration: InputDecoration(
+                          labelText: 'Sexo *',
+                          labelStyle: TextStyle(color: Colors.white),
+                        ),
+                        dropdownColor: Colors.black87,
+                        style: TextStyle(color: Colors.white),
+                        items: ['Masculino', 'Feminino']
+                            .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+                            .toList(),
+                        onChanged: (value) => setState(() => _sexoSelecionado = value!),
+                      ),
+                      SizedBox(height: 24),
+                      GestureDetector(
+                        onTap: _irParaEndereco,
+                        child: Container(
+                          width: double.infinity,
+                          padding: EdgeInsets.symmetric(vertical: 16),
+                          decoration: BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          child: Center(
+                            child: Text('PRÓXIMO PASSO',
+                                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
