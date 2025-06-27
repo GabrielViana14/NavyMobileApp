@@ -18,6 +18,7 @@ class MapaPage extends StatefulWidget {
 class MapaPageState extends State<MapaPage> {
   LatLng? _userLocation;
   final PopupController _popupController = PopupController();
+  final MapController _mapController = MapController();
   List<CarroModel> _carros = [];
   bool _mostrarInfo = false; // 👈 controla se a telinha aparece
   List<Marker> _userMarkers = [];
@@ -51,11 +52,11 @@ class MapaPageState extends State<MapaPage> {
   void _criarMarcadores() {
     print("Total de carros recebidos: ${_carros.length}");
     _customMarkers = _carros.where((carro) {
-      final loc = carro.address?.location;
+      final loc = carro.address.location;
       print('Checando carro: ${carro.brand} - localização: ${loc?.latitude}, ${loc?.longitude}');
       return loc != null && loc.latitude != 0.0 && loc.longitude != 0.0;
     }).map((carro) {
-      final loc = carro.address!.location!;
+      final loc = carro.address.location;
       print('Criando marker para: ${carro.brand} em ${loc.latitude}, ${loc.longitude}');
       return Marker(
         width: 40,
@@ -83,50 +84,50 @@ class MapaPageState extends State<MapaPage> {
 
 
   Future<void> _detectarLocalizacao() async {
-    bool servicoAtivo;
-    LocationPermission permissao;
+  bool servicoAtivo;
+  LocationPermission permissao;
 
-    //Verifica se a localização está ativa
-    servicoAtivo = await Geolocator.isLocationServiceEnabled();
-
-    if(!servicoAtivo){
-      print('Serviço desativado');
-      return;
-    }
-
-    // Verifica permissão
-    permissao = await Geolocator.checkPermission();
-    if(permissao == LocationPermission.denied){
-      permissao = await Geolocator.requestPermission();
-      if(permissao == LocationPermission.denied){
-        print("Permissão negada novamente");
-        return;
-      }
-    }
-
-    if(permissao == LocationPermission.deniedForever){
-      print("Permissão de localização permanentemente negada");
-      return;
-    }
-
-    // Pega a localização atual
-    Position posicao = await Geolocator.getCurrentPosition();
-    setState(() {
-      _userLocation = LatLng(posicao.latitude, posicao.longitude);
-      _userMarkers = [
-        Marker(
-          point: _userLocation!,
-          width: 40,
-          height: 40, 
-          child: Icon(
-           Icons.person_pin_circle, 
-           size: 40, 
-           color: Colors.blue 
-           )
-          ),  
-        ];
-    });
+  servicoAtivo = await Geolocator.isLocationServiceEnabled();
+  if (!servicoAtivo) {
+    print('Serviço desativado');
+    return;
   }
+
+  permissao = await Geolocator.checkPermission();
+  if (permissao == LocationPermission.denied) {
+    permissao = await Geolocator.requestPermission();
+    if (permissao == LocationPermission.denied) {
+      print("Permissão negada novamente");
+      return;
+    }
+  }
+
+  if (permissao == LocationPermission.deniedForever) {
+    print("Permissão de localização permanentemente negada");
+    return;
+  }
+
+  Position posicao = await Geolocator.getCurrentPosition();
+  setState(() {
+    _userLocation = LatLng(posicao.latitude, posicao.longitude);
+    _userMarkers = [
+      Marker(
+        point: _userLocation!,
+        width: 40,
+        height: 40,
+        child: Icon(
+          Icons.person_pin_circle,
+          size: 40,
+          color: Colors.blue,
+        ),
+      ),
+    ];
+  });
+
+  // Move dinamicamente o mapa
+  _mapController.move(_userLocation!, 14);
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -137,10 +138,9 @@ class MapaPageState extends State<MapaPage> {
       : Stack(
         children: [
           FlutterMap(
+            mapController: _mapController,
             options: MapOptions(
-              initialCenter: _carros.isNotEmpty
-                  ? LatLng(_carros[0].address!.location!.latitude!, _carros[0].address!.location!.longitude!)
-                  : LatLng(-23.55052, -46.633308),
+              initialCenter: _userLocation ?? LatLng(0, 0),
               initialZoom: 10.0,
               onTap: (_,__){
                 setState(() {

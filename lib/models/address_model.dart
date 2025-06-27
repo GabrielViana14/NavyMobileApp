@@ -20,14 +20,32 @@ class Address {
   });
 
   factory Address.fromJson(Map<String, dynamic> json) {
+  return Address(
+    cep: json['cep'] ?? '',
+    rua: json['rua'] ?? '',
+    numero: json['numero'] ?? '',
+    logradouro: json['logradouro'] ?? '',
+    estado: json['estado'] ?? '',
+    municipio: json['municipio'] ?? '',
+    location: json['location'] != null 
+      ? Location.fromJson(json['location']) 
+      : Location(latitude: 0.0, longitude: 0.0),
+  );
+}
+
+
+  factory Address.empty() {
     return Address(
-      cep: json['cep'] ?? '',
-      rua: json['rua'] ?? '',
-      numero: json['numero'] ?? '',
-      logradouro: json['logradouro'] ?? '',
-      estado: json['estado'] ?? '',
-      municipio: json['municipio'] ?? '',
-      location: Location.fromJson(json['location']),
+      cep: '',
+      rua: '',
+      numero: '',
+      logradouro: '',
+      estado: '',
+      municipio: '',
+      location: Location(
+        latitude: 0.0,
+        longitude: 0.0,
+      ), // Localização padrão
     );
   }
 }

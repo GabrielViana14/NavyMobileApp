@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_test/service/api_service.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 enum Genero { masculino, feminino }
@@ -9,12 +10,11 @@ class EditPage extends StatefulWidget {
   State<EditPage> createState() => _EditPageState();
 }
 
+
+
 class _EditPageState extends State<EditPage> {
   final TextEditingController nome = TextEditingController();
   final TextEditingController email = TextEditingController();
-  final TextEditingController senhaAntiga = TextEditingController();
-  final TextEditingController senhaNova = TextEditingController();
-  final TextEditingController senhaNovaConfirmacao = TextEditingController();
   final TextEditingController CPF = TextEditingController();
   final TextEditingController RG = TextEditingController();
   final TextEditingController CEP = TextEditingController();
@@ -24,6 +24,41 @@ class _EditPageState extends State<EditPage> {
   final TextEditingController numero = TextEditingController();
   final TextEditingController logradouro = TextEditingController();
   Genero? _generoSelecionado;
+
+
+  @override
+void initState() {
+  super.initState();
+  carregarDadosUsuario();
+}
+
+Future<void> carregarDadosUsuario() async {
+  try {
+    final userData = await ApiService.getUsuario();
+
+    final profile = userData['user_profile'] ?? {};
+    final address = profile['address'] ?? {};
+
+    setState(() {
+      nome.text = profile['name'] ?? '';
+      email.text = userData['email'] ?? '';
+      CPF.text = profile['cpf'] ?? '';
+      RG.text = profile['rg'] ?? '';
+      CEP.text = address['cep'] ?? '';
+      estado.text = address['estado'] ?? '';
+      municipio.text = address['municipio'] ?? '';
+      rua.text = address['rua'] ?? '';
+      numero.text = address['numero']?.toString() ?? ''; 
+      logradouro.text = address['logradouro'] ?? '';
+      _generoSelecionado = (profile['gender'] == 'masculino')
+          ? Genero.masculino
+          : Genero.feminino;
+    });
+  } catch (e) {
+    print('Erro ao carregar dados do usuário: $e');
+  }
+}
+
 
 
 
@@ -91,12 +126,6 @@ class _EditPageState extends State<EditPage> {
                     CustomTextField(controller: nome),
                     Text('E-mail:'),
                     CustomTextField(controller: email),
-                    Text('Senha atual:'),
-                    CustomTextField(controller: senhaAntiga),
-                    Text('Nova senha:'),
-                    CustomTextField(controller: senhaNova),
-                    Text('Confirmação nova senha:'),
-                    CustomTextField(controller: senhaNovaConfirmacao),
                     
                   ],
                 ),
@@ -220,11 +249,68 @@ class _EditPageState extends State<EditPage> {
                   ),
                 ],
               ),
-              onTap: (){
-                print('Alterações salvas');
-                Navigator.of(context).pop();
-                
+              onTap: () async {
+                try {
+                  final dadosParaAtualizar = {
+                    'nome': nome.text,
+                    'email': email.text,
+                    'cpf': CPF.text.replaceAll(RegExp(r'[^0-9]'), ''),
+                    'rg': RG.text.replaceAll(RegExp(r'[^0-9]'), ''),
+                    'genero': _generoSelecionado == Genero.masculino ? 'masculino' : 'feminino',
+                    'cep': CEP.text,
+                    'estado': estado.text,
+                    'municipio': municipio.text,
+                    'rua': rua.text,
+                    'numero': numero.text,
+                    'logradouro': logradouro.text,
+                  };
+
+                  print('Dados enviados para updateUsuario: $dadosParaAtualizar');
+
+                  await ApiService.updateUsuario(
+                    nome: nome.text,
+                    email: email.text,
+                    cpf: CPF.text.replaceAll(RegExp(r'[^0-9]'), ''), 
+                    rg: RG.text.replaceAll(RegExp(r'[^0-9]'), ''),
+                    genero: _generoSelecionado == Genero.masculino ? 'masculino' : 'feminino',
+                    cep: CEP.text,
+                    estado: estado.text,
+                    municipio: municipio.text,
+                    rua: rua.text,
+                    numero: numero.text,
+                    logradouro: logradouro.text,
+                  );
+
+                  final usuarioAtualizado = await ApiService.getUsuario();
+
+                  setState(() {
+                    final profile = usuarioAtualizado['user_profile'] ?? {};
+                    final address = profile['address'] ?? {};
+
+                    nome.text = profile['name'] ?? '';
+                    email.text = usuarioAtualizado['email'] ?? '';
+                    CPF.text = profile['cpf'] ?? '';
+                    RG.text = profile['rg'] ?? '';
+                    CEP.text = address['cep'] ?? '';
+                    estado.text = address['estado'] ?? '';
+                    municipio.text = address['municipio'] ?? '';
+                    rua.text = address['rua'] ?? '';
+                    numero.text = address['numero'] ?? '';
+                    logradouro.text = address['logradouro'] ?? '';
+                    _generoSelecionado = (profile['gender'] == 'masculino') ? Genero.masculino : Genero.feminino;
+                  });
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Alterações salvas com sucesso!')),
+                  );
+                } catch (e) {
+                  print('Erro ao salvar alterações: $e');
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Erro ao salvar alterações')),
+                  );
+                }
               },
+
             ),
             GestureDetector(
               child: Row(

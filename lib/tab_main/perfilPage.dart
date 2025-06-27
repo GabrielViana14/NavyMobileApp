@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_test/app_controller.dart';
+import 'package:flutter_application_test/service/api_service.dart';
 
 class PerfilPage extends StatefulWidget {
   const PerfilPage({super.key});
@@ -223,8 +224,10 @@ class _PerfilPageState extends State<PerfilPage> {
                 )
               ),
               GestureDetector(
-                onTap: (){
+                onTap: () async {
                   print("Fazendo logoff");
+                  await ApiService.deleteToken(); // Remove o token
+                  await ApiService.deleteUserId(); // Se você estiver salvando o user_id também
                   AppController.instance.deslogar();
                   Navigator.of(context).pushReplacementNamed('/login');
                 },

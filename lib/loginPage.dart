@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_test/app_controller.dart';
 import 'package:flutter_application_test/service/api_service.dart';
 import 'cadastroPage.dart';
-import 'cadastro_model.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -92,7 +91,7 @@ class LoginPageState extends State<LoginPage> {
                           onChanged: (value) {
                             senha = value;
                           },
-                          obscureText: false,
+                          obscureText: true, // Mudei para false para facilitar o teste
                           decoration: InputDecoration(
                             hintText: 'Senha',
                             hintStyle: TextStyle(
@@ -115,9 +114,10 @@ class LoginPageState extends State<LoginPage> {
                           onTap: () async {
                             try {
                               print('iniciando login... usuario: ${usuario.trim()} - senha: ${senha.trim()} ');
-                              final token = await ApiService.loginUsuario(usuario.trim(), senha.trim());
-                              print('Token recebido: $token');  // <-- imprime o token recebido no console
-                              if (token != null){
+                              final loginResult = await ApiService.loginUsuario(usuario.trim(), senha.trim());
+                              if (loginResult != null) {
+                                print('Token: ${loginResult.token}');
+                                print('UserId: ${loginResult.userId}');
                                 AppController.instance.logar();
                                 Navigator.of(context).pushNamed('/main');
                               }

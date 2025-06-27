@@ -36,7 +36,7 @@ class HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: FutureBuilder<List<dynamic>>(
+      body: FutureBuilder<List<CarroModel>>(
         future: _carros, 
         builder: (context, snapshot){
           if(snapshot.connectionState == ConnectionState.waiting){
@@ -60,6 +60,7 @@ class HomePageState extends State<HomePage> {
                 informacoes: carro.shortDescription ?? 'Desconhecida', 
                 anoKilo: '${carro.year ?? '----'} - ${carro.mileage ?? 0}KM', 
                 preco: double.tryParse((carro.pricePerHour ?? carro.price ?? 0).toString()) ?? 0.0,
+                photoUrl: carro.photoUrl,
                 );
             }
             );
@@ -71,18 +72,20 @@ class HomePageState extends State<HomePage> {
 
 class ListViewCarItem extends StatelessWidget {
   const ListViewCarItem({
-    super.key, 
-    required this.marca, 
-    required this.titulo, 
-    required this.informacoes, 
-    required this.anoKilo, 
-    required this.preco
-    });
+  super.key,
+  required this.marca,
+  required this.titulo,
+  required this.informacoes,
+  required this.anoKilo,
+  required this.preco,
+  required this.photoUrl,
+});
 
   final String marca;
   final String titulo;
   final String informacoes;
   final String anoKilo;
+  final String photoUrl;
   final double preco;
 
   @override
@@ -111,10 +114,23 @@ class ListViewCarItem extends StatelessWidget {
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image.asset(
-                  'assets/placeholders/placeholder_carro.png',
+                SizedBox(
                   width: 150,
                   height: 150,
+                  child: photoUrl != null && photoUrl!.isNotEmpty
+                    ? Image.network(
+                        photoUrl!,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          // Se a imagem não carregar, mostra placeholder
+                          return Image.asset('assets/placeholders/placeholder_carro.png');
+                        },
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) return child;
+                          return Center(child: CircularProgressIndicator());
+                        },
+                      )
+                    : Image.asset('assets/placeholders/placeholder_carro.png'),
                 ),
               ],
             ),
