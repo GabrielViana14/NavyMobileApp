@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_test/models/carro_model.dart';
 import 'package:flutter_application_test/service/api_service.dart';
@@ -15,7 +17,7 @@ class MapaPage extends StatefulWidget {
   State<MapaPage> createState() => MapaPageState();
 }
 
-class MapaPageState extends State<MapaPage> {
+class MapaPageState extends State<MapaPage> with TickerProviderStateMixin {
   LatLng? _userLocation;
   final PopupController _popupController = PopupController();
   final MapController _mapController = MapController();
@@ -24,6 +26,7 @@ class MapaPageState extends State<MapaPage> {
   List<Marker> _userMarkers = [];
   List<Marker> _customMarkers = [];
   CarroModel? _carroSelecionado;
+  StreamSubscription<Position>? _posicaoStream;
 
 
 
@@ -80,10 +83,30 @@ class MapaPageState extends State<MapaPage> {
     print("Total de markers criados: ${_customMarkers.length}");
   }
 
+  void _animarMapa(LatLng destino) {
+    final inicio = _mapController.center; // posição atual
+    final zoom = _mapController.zoom;
+
+    final latTween = Tween<double>(begin: inicio.latitude, end: destino.latitude);
+    final lngTween = Tween<double>(begin: inicio.longitude, end: destino.longitude);
+
+    final controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 500),
+    );
+
+    controller.addListener(() {
+      final lat = latTween.evaluate(controller);
+      final lng = lngTween.evaluate(controller);
+      _mapController.move(LatLng(lat, lng), zoom);
+    });
+
+    controller.forward();
+  }
 
 
 
-  Future<void> _detectarLocalizacao() async {
+  void _detectarLocalizacao() async {
   bool servicoAtivo;
   LocationPermission permissao;
 
@@ -97,7 +120,7 @@ class MapaPageState extends State<MapaPage> {
   if (permissao == LocationPermission.denied) {
     permissao = await Geolocator.requestPermission();
     if (permissao == LocationPermission.denied) {
-      print("Permissão negada novamente");
+      print("Permissão negada");
       return;
     }
   }
@@ -106,6 +129,38 @@ class MapaPageState extends State<MapaPage> {
     print("Permissão de localização permanentemente negada");
     return;
   }
+
+  // Steam para atualizações de localização
+  _posicaoStream = Geolocator.getPositionStream(
+    locationSettings: const LocationSettings(
+      accuracy: LocationAccuracy.high,
+      distanceFilter: 1, // Atualiza a cada 5 metros
+    ),
+  ).listen((Position posicao) {
+    final novaPosicao = LatLng(posicao.latitude, posicao.longitude);
+
+    setState(() {
+      _userLocation = novaPosicao;
+      _userMarkers = [
+        Marker(
+          point: novaPosicao,
+          width: 40,
+          height: 40,
+          child: Icon(
+            Icons.person_pin_circle,
+            size: 40,
+            color: Colors.blue,
+          ),
+        ),
+      ];
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted && _userLocation != null) {
+          _animarMapa(novaPosicao);
+          // _mapController.move(novaPosicao, _mapController.camera.zoom);
+        }
+      });
+    });
+  });
 
   Position posicao = await Geolocator.getCurrentPosition();
   setState(() {
@@ -122,10 +177,15 @@ class MapaPageState extends State<MapaPage> {
         ),
       ),
     ];
+    
   });
 
-  // Move dinamicamente o mapa
-  _mapController.move(_userLocation!, 14);
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    if (mounted && _userLocation != null) {
+      _mapController.move(_userLocation!, _mapController.camera.zoom);
+    }
+  });
+
 }
 
 
@@ -141,7 +201,7 @@ class MapaPageState extends State<MapaPage> {
             mapController: _mapController,
             options: MapOptions(
               initialCenter: _userLocation ?? LatLng(0, 0),
-              initialZoom: 10.0,
+              initialZoom: 18.0,
               onTap: (_,__){
                 setState(() {
                   _mostrarInfo = false;
