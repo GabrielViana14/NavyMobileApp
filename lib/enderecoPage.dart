@@ -1,4 +1,7 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+
 import 'cadastroFinalPage.dart';
 import 'cadastro_model.dart';
 
@@ -12,6 +15,7 @@ class EnderecoPage extends StatefulWidget {
 
 class _EnderecoPageState extends State<EnderecoPage> {
   final _formKey = GlobalKey<FormState>();
+
   final _cepController = TextEditingController();
   final _ufController = TextEditingController();
   final _cidadeController = TextEditingController();
@@ -26,8 +30,39 @@ class _EnderecoPageState extends State<EnderecoPage> {
   }
 
   String? _validarCep(String? value) {
-    if (value == null || !RegExp(r'^\d{5}-?\d{3}$').hasMatch(value)) return 'CEP inválido';
+    if (value == null || !RegExp(r'^\d{8}$').hasMatch(value)) return 'CEP inválido';
     return null;
+  }
+
+  Future<void> _buscarCep(String cep) async {
+    final url = Uri.parse('https://viacep.com.br/ws/$cep/json/');
+    try {
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['erro'] == true) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('CEP não encontrado.')),
+          );
+          return;
+        }
+
+        setState(() {
+          _ufController.text = data['uf'] ?? '';
+          _cidadeController.text = data['localidade'] ?? '';
+          _ruaController.text = data['logradouro'] ?? '';
+          _bairroController.text = data['bairro'] ?? '';
+        });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Erro ao buscar CEP.')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Erro de conexão com o ViaCEP.')),
+      );
+    }
   }
 
   void _irParaFinal() {
@@ -63,6 +98,29 @@ class _EnderecoPageState extends State<EnderecoPage> {
         style: TextStyle(color: Colors.white),
       ),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _cepController.addListener(() {
+      final cep = _cepController.text.replaceAll(RegExp(r'\D'), '');
+      if (cep.length == 8) {
+        _buscarCep(cep);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _cepController.dispose();
+    _ufController.dispose();
+    _cidadeController.dispose();
+    _ruaController.dispose();
+    _numeroController.dispose();
+    _bairroController.dispose();
+    _complementoController.dispose();
+    super.dispose();
   }
 
   @override
@@ -105,7 +163,7 @@ class _EnderecoPageState extends State<EnderecoPage> {
                         }),
                       ),
                       SizedBox(height: 24),
-                      _campo('CEP *', _cepController, validator: _validarCep),
+                      _campo('CEP *', _cepController, tipo: TextInputType.number, validator: _validarCep),
                       _campo('UF *', _ufController),
                       _campo('Cidade *', _cidadeController),
                       _campo('Rua *', _ruaController),
