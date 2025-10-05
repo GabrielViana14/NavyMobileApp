@@ -55,12 +55,7 @@ class HomePageState extends State<HomePage> {
               final carro = carros[index];
 
               return ListViewCarItem(
-                marca: carro.brand ?? 'Desconhecida', 
-                titulo: carro.model ?? 'Desconhecida', 
-                informacoes: carro.shortDescription ?? 'Desconhecida', 
-                anoKilo: '${carro.year ?? '----'} - ${carro.mileage ?? 0}KM', 
-                preco: double.tryParse((carro.pricePerHour ?? carro.price ?? 0).toString()) ?? 0.0,
-                photoUrl: carro.photoUrl,
+                carro: carro,
                 );
             }
             );
@@ -71,22 +66,11 @@ class HomePageState extends State<HomePage> {
 }
 
 class ListViewCarItem extends StatelessWidget {
+  final CarroModel carro;
   const ListViewCarItem({
   super.key,
-  required this.marca,
-  required this.titulo,
-  required this.informacoes,
-  required this.anoKilo,
-  required this.preco,
-  required this.photoUrl,
+  required this.carro,
 });
-
-  final String marca;
-  final String titulo;
-  final String informacoes;
-  final String anoKilo;
-  final String photoUrl;
-  final double preco;
 
   @override
   Widget build(BuildContext context) {
@@ -117,9 +101,9 @@ class ListViewCarItem extends StatelessWidget {
                 SizedBox(
                   width: 150,
                   height: 150,
-                  child: photoUrl != null && photoUrl!.isNotEmpty
+                  child: carro.photoUrl != null && carro.photoUrl!.isNotEmpty
                     ? Image.network(
-                        photoUrl!,
+                        carro.photoUrl!,
                         fit: BoxFit.cover,
                         errorBuilder: (context, error, stackTrace) {
                           // Se a imagem não carregar, mostra placeholder
@@ -144,7 +128,7 @@ class ListViewCarItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    marca,
+                    carro.brand,
                     style: TextStyle(
                       fontSize: 25.0,
                       color: Color(0xFF4444E8),
@@ -153,7 +137,7 @@ class ListViewCarItem extends StatelessWidget {
                   ),
                   Flexible(
                       child: Text(
-                        titulo.length > 15 ? '${titulo.substring(0, 15)}...' : titulo,
+                        carro.model.length > 15 ? '${carro.model.substring(0, 15)}...' : carro.model,
                         maxLines: 3,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
@@ -166,7 +150,7 @@ class ListViewCarItem extends StatelessWidget {
                   const SizedBox(height: 4),
                   Flexible(
                     child: Text(
-                      informacoes,
+                      carro.shortDescription ?? '',
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
@@ -177,7 +161,7 @@ class ListViewCarItem extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    anoKilo,
+                    carro.year != null ? 'Ano: ${carro.year}' : 'Ano: N/A',
                     maxLines: 3,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
@@ -187,7 +171,7 @@ class ListViewCarItem extends StatelessWidget {
                   ),
                       
                   Text(
-                    "R\$ $preco",
+                    "R\$ ${carro.pricePerHour}",
                     maxLines: 3,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
