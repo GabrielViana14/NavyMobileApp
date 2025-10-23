@@ -10,7 +10,8 @@ class CarroModel {
   final double price;
   final double pricePerHour;
   final Address address;
-  final String photoUrl; // Adicionando o campo photoUrl
+  final String photoUrl;
+  final String license_plate;
 
   CarroModel({
     required this.id,
@@ -23,6 +24,7 @@ class CarroModel {
     required this.pricePerHour,
     required this.address,
     required this.photoUrl,
+    required this.license_plate,
   });
 
   factory CarroModel.fromJson(Map<String, dynamic> json) {
@@ -34,11 +36,26 @@ class CarroModel {
       year: json['year'] ?? 0,
       mileage: json['mileage'] ?? 0,
       price: double.tryParse(json['price']?.toString() ?? '') ?? 0.0,
-      pricePerHour: double.tryParse(json['price_per_hour']?.toString() ?? '') ?? 0.0,
+      pricePerHour: json['pricePerHour']?.toDouble() 
+              ?? (json['price'] != null ? (json['price'].toDouble() * 0.005) : 20.0),
       address: json['address'] != null
         ? Address.fromJson(json['address'] as Map<String, dynamic>)
         : Address.empty(), // ou outra forma de criar um endereço padrão
       photoUrl: json['photo_url'] ?? '', // Acessando o campo photoUrl
+      license_plate: json['license_plate'] ?? '',
     );
   }
+
+  Map<String, dynamic> toJson() {
+  return {
+    'brand': brand,
+    'model': model,
+    'license_plate': license_plate,
+    'pricePerHour': pricePerHour,
+    'price': price,
+    'shortDescription': shortDescription,
+    'photoUrl': photoUrl,
+    'year': year,
+  };
+}
 }

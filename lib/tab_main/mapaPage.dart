@@ -200,6 +200,7 @@ class MapaPageState extends State<MapaPage> with TickerProviderStateMixin {
           FlutterMap(
             mapController: _mapController,
             options: MapOptions(
+              
               initialCenter: _userLocation ?? LatLng(0, 0),
               initialZoom: 18.0,
               onTap: (_,__){

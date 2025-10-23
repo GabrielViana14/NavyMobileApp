@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_test/carroDetalhesPage.dart';
 import 'package:flutter_application_test/models/carro_model.dart';
 import 'package:flutter_application_test/service/api_service.dart';
 
@@ -106,7 +107,6 @@ class ListViewCarItem extends StatelessWidget {
                         carro.photoUrl!,
                         fit: BoxFit.cover,
                         errorBuilder: (context, error, stackTrace) {
-                          // Se a imagem não carregar, mostra placeholder
                           return Image.asset('assets/placeholders/placeholder_carro.png');
                         },
                         loadingBuilder: (context, child, loadingProgress) {
@@ -188,6 +188,12 @@ class ListViewCarItem extends StatelessWidget {
       ),
       onTap: () {
         print('Item clicado');
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => CarroDetalhesPage(carro: carro),
+            )
+        );
       },
     );
   }
