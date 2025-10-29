@@ -29,12 +29,16 @@ class _CarroDetalhesPageState extends State<CarroDetalhesPage> {
   
   void incrementarDias() => setState(() => dias++);
   void decrementarDias() {
-    if (dias > 0) setState(() => dias--);
+    if (dias > 0 && (dias + (horas > 0 ? 1 : 0)) > 0) {
+    setState(() => dias--);
+    }
   }
 
   void incrementarHoras() => setState(() => horas++);
   void decrementarHoras() {
-    if (horas > 0) setState(() => horas--);
+    if ((dias + horas) > 1 && horas > 0) {
+    setState(() => horas--);
+    }
   }
 
   @override
@@ -185,7 +189,7 @@ class _CarroDetalhesPageState extends State<CarroDetalhesPage> {
                               Row(
                                 children: [
                                   IconButton(
-                                    onPressed: decrementarDias, 
+                                    onPressed: (dias + horas <= 1 || dias == 0) ? null : decrementarDias, // desabilita quando dias == 0
                                     icon: Icon(Icons.remove),
                                   ),
                                   SizedBox(width: 8),
@@ -216,7 +220,7 @@ class _CarroDetalhesPageState extends State<CarroDetalhesPage> {
                               Row(
                                 children: [
                                   IconButton(
-                                    onPressed: () => setState(() => horas--), 
+                                    onPressed: (dias + horas <= 1 || horas == 0) ? null : decrementarHoras, // desabilita quando horas == 0
                                     icon: Icon(Icons.remove),
                                   ),
                                   SizedBox(width: 8),
