@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_test/models/carro_model.dart';
+import 'package:intl/intl.dart';
 
 class CarroDetalhesPage extends StatefulWidget {
   final CarroModel carro;
@@ -14,6 +15,14 @@ class _CarroDetalhesPageState extends State<CarroDetalhesPage> {
   int? tempoSelecionado = 1; // 1 = Definir tempo mínimo, 2 = Horas livres
   int dias = 0;
   int horas = 1;
+  
+  // Formatação de moeda
+  final formatador = NumberFormat.currency(
+  locale: 'pt_BR', 
+  symbol: 'R\$',
+  decimalDigits: 2,
+);
+
 
   // Função para calcular preço
   double calcularPreco() {
@@ -317,7 +326,7 @@ class _CarroDetalhesPageState extends State<CarroDetalhesPage> {
             ),
             SizedBox(height: 16),
             Text(
-              'R\$ ${calcularPreco().toStringAsFixed(2)}',
+              formatador.format(calcularPreco()),
               style: const TextStyle(
                     fontSize: 36,
                     fontWeight: FontWeight.bold,

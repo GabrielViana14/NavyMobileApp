@@ -1,10 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_test/carroDetalhesPage.dart';
 import 'package:flutter_application_test/models/carro_model.dart';
 import 'package:flutter_application_test/service/api_service.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
+import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
 
@@ -27,6 +29,14 @@ class MapaPageState extends State<MapaPage> with TickerProviderStateMixin {
   List<Marker> _customMarkers = [];
   CarroModel? _carroSelecionado;
   StreamSubscription<Position>? _posicaoStream;
+
+  // Formatação de moeda
+  final formatador = NumberFormat.currency(
+  locale: 'pt_BR', 
+  symbol: 'R\$',
+  decimalDigits: 2,
+  );
+
 
 
 
@@ -238,45 +248,65 @@ class MapaPageState extends State<MapaPage> with TickerProviderStateMixin {
 
 class InfoCard extends StatelessWidget {
   final CarroModel carro;
+  // Formatação de moeda
+  final formatador = NumberFormat.currency(
+  locale: 'pt_BR', 
+  symbol: 'R\$',
+  decimalDigits: 2,
+  );
 
-  const InfoCard({super.key, required this.carro});
+  InfoCard({super.key, required this.carro});
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 8,
-      color: const Color(0xffA4A4A4),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              carro.pricePerHour != null ? 'R\$ ${carro.pricePerHour} / hora' : 'Preço indisponível',
-              style: const TextStyle(
-                fontSize: 32,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
+    return GestureDetector(
+      onTap: () {
+        // Navega para a página de detalhes
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => CarroDetalhesPage(carro: carro),
+          ),
+        );
+      },
+      child: Card(
+        elevation: 8,
+        color: const Color(0xffA4A4A4),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                carro.pricePerHour != null
+                    ? '${formatador.format(carro.pricePerHour)} / hora'
+                    : 'Preço indisponível',
+                style: const TextStyle(
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
               ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              '${carro.brand} - ${carro.year}',
-              style: const TextStyle(color: Colors.white),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              carro.shortDescription ?? '',
-              style: const TextStyle(color: Colors.white70),
-              textAlign: TextAlign.center,
-            ),
-          ],
+              const SizedBox(height: 8),
+              Text(
+                '${carro.brand} - ${carro.year}',
+                style: const TextStyle(color: Colors.white),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                carro.shortDescription ?? '',
+                style: const TextStyle(color: Colors.white70),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 }
+
