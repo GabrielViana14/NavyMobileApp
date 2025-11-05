@@ -41,7 +41,10 @@ class CarroModel {
       address: json['address'] != null
         ? Address.fromJson(json['address'] as Map<String, dynamic>)
         : Address.empty(), // ou outra forma de criar um endereço padrão
-      photoUrl: json['photo_url'] ?? '', // Acessando o campo photoUrl
+      photoUrl: json['photo_url'] != null && json['photo_url'] != ''
+        ? 'https://woxvltaqfrkguonebeeu.supabase.co/storage/v1/object/public/${json['photo_url']}'
+        : '', // ou uma URL de placeholder
+        // Acessando o campo photoUrl
       license_plate: json['license_plate'] ?? '',
     );
   }

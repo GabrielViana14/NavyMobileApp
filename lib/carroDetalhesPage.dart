@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_test/carroConfirmacaoPage.dart';
 import 'package:flutter_application_test/models/carro_model.dart';
 import 'package:intl/intl.dart';
 
@@ -442,6 +443,21 @@ class _CarroDetalhesPageState extends State<CarroDetalhesPage> {
         child: ElevatedButton(
           onPressed: () {
             // Ação ao pressionar o botão de reservar
+            final valorTotal = calcularPreco(); // pega o valor já calculado
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => CarroConfirmacaoPage(
+                  carro: widget.carro,
+                  dias: dias,
+                  horas: horas,
+                  valorTotal: valorTotal,
+                  tipoTempo: tempoSelecionado == 1 ? 'Tempo Fixo' : 'Horas Livre',
+                ),
+              ),
+            );
+
+
           },
           style: ElevatedButton.styleFrom(
             padding: const EdgeInsets.symmetric(vertical: 16.0),

@@ -114,70 +114,12 @@ class MapaPageState extends State<MapaPage> with TickerProviderStateMixin {
     controller.forward();
   }
 
-
-
-  void _detectarLocalizacao() async {
-  bool servicoAtivo;
-  LocationPermission permissao;
-
-  servicoAtivo = await Geolocator.isLocationServiceEnabled();
-  if (!servicoAtivo) {
-    print('Serviço desativado');
-    return;
-  }
-
-  permissao = await Geolocator.checkPermission();
-  if (permissao == LocationPermission.denied) {
-    permissao = await Geolocator.requestPermission();
-    if (permissao == LocationPermission.denied) {
-      print("Permissão negada");
-      return;
-    }
-  }
-
-  if (permissao == LocationPermission.deniedForever) {
-    print("Permissão de localização permanentemente negada");
-    return;
-  }
-
-  // Steam para atualizações de localização
-  _posicaoStream = Geolocator.getPositionStream(
-    locationSettings: const LocationSettings(
-      accuracy: LocationAccuracy.high,
-      distanceFilter: 1, // Atualiza a cada 5 metros
-    ),
-  ).listen((Position posicao) {
+  void _atualizarLocalizacao(Position posicao) {
     final novaPosicao = LatLng(posicao.latitude, posicao.longitude);
 
-    setState(() {
-      _userLocation = novaPosicao;
-      _userMarkers = [
-        Marker(
-          point: novaPosicao,
-          width: 40,
-          height: 40,
-          child: Icon(
-            Icons.person_pin_circle,
-            size: 40,
-            color: Colors.blue,
-          ),
-        ),
-      ];
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted && _userLocation != null) {
-          _animarMapa(novaPosicao);
-          // _mapController.move(novaPosicao, _mapController.camera.zoom);
-        }
-      });
-    });
-  });
-
-  Position posicao = await Geolocator.getCurrentPosition();
-  setState(() {
-    _userLocation = LatLng(posicao.latitude, posicao.longitude);
     _userMarkers = [
       Marker(
-        point: _userLocation!,
+        point: novaPosicao,
         width: 40,
         height: 40,
         child: Icon(
@@ -187,16 +129,78 @@ class MapaPageState extends State<MapaPage> with TickerProviderStateMixin {
         ),
       ),
     ];
-    
-  });
 
-  WidgetsBinding.instance.addPostFrameCallback((_) {
-    if (mounted && _userLocation != null) {
-      _mapController.move(_userLocation!, _mapController.camera.zoom);
+    // Move o mapa diretamente
+    _mapController.move(novaPosicao, _mapController.zoom);
+  }
+
+
+
+
+  void _detectarLocalizacao() async {
+    bool servicoAtivo = await Geolocator.isLocationServiceEnabled();
+    if (!servicoAtivo) return;
+
+    LocationPermission permissao = await Geolocator.checkPermission();
+    if (permissao == LocationPermission.denied) {
+      permissao = await Geolocator.requestPermission();
+      if (permissao == LocationPermission.denied) return;
     }
+    if (permissao == LocationPermission.deniedForever) return;
+
+    // Pega a localização atual
+    Position posicao = await Geolocator.getCurrentPosition();
+    _userLocation = LatLng(posicao.latitude, posicao.longitude);
+
+    // Inicializa o marcador do usuário
+    _userMarkers = [
+      Marker(
+        point: _userLocation!,
+        width: 40,
+        height: 40,
+        child: Icon(Icons.person_pin_circle, size: 40, color: Colors.blue),
+      ),
+    ];
+
+    setState(() {}); // só atualiza UI uma vez
+
+    // Move o mapa para a localização inicial
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+  if (_userLocation == null) return;
+
+  // Move o mapa para a posição inicial do usuário
+  _mapController.move(_userLocation!, 18.0);
+
+  // Stream de atualização de posição
+  _posicaoStream = Geolocator.getPositionStream(
+          locationSettings: const LocationSettings(
+        accuracy: LocationAccuracy.high,
+        distanceFilter: 10,
+      ),
+    ).listen((posicao) {
+      final novaPos = LatLng(posicao.latitude, posicao.longitude);
+
+      // Atualiza apenas os marcadores do usuário
+      _userMarkers = [
+        Marker(
+          point: novaPos,
+          width: 40,
+          height: 40,
+          child: Icon(Icons.person_pin_circle, size: 40, color: Colors.blue),
+        ),
+      ];
+
+      // Move o mapa para a nova posição
+      _mapController.move(novaPos, _mapController.zoom);
+
+      if (mounted) setState(() {}); // atualiza a UI
+    });
   });
 
-}
+
+    ///
+  }
+
 
 
   @override
