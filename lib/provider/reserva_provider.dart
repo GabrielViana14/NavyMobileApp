@@ -5,11 +5,9 @@ class ReservaProvider with ChangeNotifier {
   ReservaModel? _reservaAtual;
   final List<ReservaModel> _historico = [];
 
-  // ---- NOVO ----
   // 0 = Home, 1 = Mapa, 2 = Reservas, 3 = Perfil
   int _tabIndexParaMostrar = 0; 
   int get tabIndexParaMostrar => _tabIndexParaMostrar;
-  // ---- FIM NOVO ----
 
 
   ReservaModel? get reservaAtual => _reservaAtual;
@@ -23,16 +21,13 @@ class ReservaProvider with ChangeNotifier {
     
     _reservaAtual = novaReserva;
     
-    // ---- NOVO ----
     // Ao criar uma reserva, mande o app para a aba "Reservas" (índice 2)
     _tabIndexParaMostrar = 2; 
-    // ---- FIM NOVO ----
     
     // Avisa a MainPage (para trocar de aba) E a ReservaPage (para mostrar os dados)
     notifyListeners();
   }
 
-  // ---- NOVO ----
   // Reseta a aba para "Home" (índice 0)
   void resetTab() {
     _tabIndexParaMostrar = 0;
@@ -42,5 +37,4 @@ class ReservaProvider with ChangeNotifier {
     _tabIndexParaMostrar = novoIndex;
     notifyListeners();
   }
-  // ---- FIM NOVO ----
 }

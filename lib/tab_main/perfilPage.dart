@@ -13,7 +13,6 @@ class _PerfilPageState extends State<PerfilPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Adicionei um AppBar para consistência
       appBar: AppBar(
         title: const Text('Meu Perfil'),
         backgroundColor: Colors.white,
@@ -57,12 +56,11 @@ class _PerfilPageState extends State<PerfilPage> {
                     fontWeight: FontWeight.bold, fontSize: 20.0),
               ),
               Container(
-                // Removi a altura fixa para o conteúdo caber dinamicamente
                 // height: 150.0,
                 padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
                 margin: const EdgeInsets.all(10.0),
                 decoration: BoxDecoration(
-                  color: Colors.white, // Use Theme.of(context).cardColor
+                  color: Colors.white,
                   borderRadius: BorderRadius.circular(16.0),
                   boxShadow: [
                     BoxShadow(
@@ -74,7 +72,6 @@ class _PerfilPageState extends State<PerfilPage> {
                 ),
                 child: Column(
                   children: [
-                    // Mudei para ListTile para um visual mais padrão
                     _buildConfigItem(
                       context,
                       icon: Icons.account_circle_sharp,
@@ -89,7 +86,6 @@ class _PerfilPageState extends State<PerfilPage> {
                       icon: Icons.notifications_outlined, // Ícone diferente
                       text: "Configuração de notificação",
                       onTap: () {
-                         // Você precisará criar esta página
                         // Navigator.of(context).pushNamed('/notifications');
                       },
                     ),
@@ -115,7 +111,6 @@ class _PerfilPageState extends State<PerfilPage> {
                     fontWeight: FontWeight.bold, fontSize: 20.0),
               ),
               Container(
-                // height: 110.0, // Removido
                 padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
                 margin: const EdgeInsets.all(10.0),
                 decoration: BoxDecoration(

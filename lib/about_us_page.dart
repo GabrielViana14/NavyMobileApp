@@ -5,7 +5,7 @@ class AboutUsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Define o estilo do texto do corpo para ser reutilizável
+    
     final bodyStyle = TextStyle(
       fontSize: 16,
       color: Colors.grey[700],

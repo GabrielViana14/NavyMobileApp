@@ -10,7 +10,7 @@ class ReservaPage extends StatefulWidget {
   State<ReservaPage> createState() => _ReservaPageState();
 }
 
-// Adicionamos 'TickerProviderStateMixin' para a animação do TabController
+
 class _ReservaPageState extends State<ReservaPage>
     with SingleTickerProviderStateMixin {
   TabController? _tabController;
@@ -31,9 +31,6 @@ class _ReservaPageState extends State<ReservaPage>
 
   @override
   Widget build(BuildContext context) {
-    // ---- CORREÇÃO AQUI ----
-    // Removemos o Scaffold e o 'body:'.
-    // A página agora retorna a Column diretamente.
     final reservaProvider = context.watch<ReservaProvider>();
     final ReservaModel? reservaAtual = reservaProvider.reservaAtual;
     final List<ReservaModel> historico = reservaProvider.historico;
@@ -72,7 +69,6 @@ class _ReservaPageState extends State<ReservaPage>
         ),
       ],
     );
-    // ---- FIM DA CORREÇÃO ----
   }
 
   /// Constrói o SearchBar do topo
@@ -197,7 +193,6 @@ class _ReservaPageState extends State<ReservaPage>
                 title: 'Local de Devolução',
                 // Dados Dinâmicos (assumindo que é o mesmo local)
                 subtitle: '${carro.address.rua}, ${carro.address.numero}',
-                // TODO: Você vai querer guardar a data de devolução na ReservaModel
                 data: 'Devolução: ${reservaAtual.dias} dias, ${reservaAtual.horas} horas',
               ),
               const Divider(height: 32),

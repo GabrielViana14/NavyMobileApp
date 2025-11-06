@@ -1,6 +1,5 @@
 import 'package:flutter_application_test/models/carro_model.dart';
 
-// Enum para sabermos o status da reserva
 enum StatusReserva { pendente, ativa, finalizada }
 
 class ReservaModel {
@@ -10,9 +9,6 @@ class ReservaModel {
   final double valorTotal;
   final String tipoTempo;
   final StatusReserva status;
-
-  // Você pode adicionar mais campos conforme a necessidade
-  // (ex: datas, local de retirada/devolução)
 
   ReservaModel({
     required this.carro,
