@@ -13,15 +13,24 @@ class _PerfilPageState extends State<PerfilPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // Adicionei um AppBar para consistência
+      appBar: AppBar(
+        title: const Text('Meu Perfil'),
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
+        elevation: 1,
+      ),
       body: Container(
-        padding: EdgeInsets.all(12),
+        padding: const EdgeInsets.all(12),
+        // Use a cor de fundo do tema
+        color: Theme.of(context).scaffoldBackgroundColor,
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
-                children: [
+                children: const [
                   SizedBox(
                     width: 10,
                   ),
@@ -35,193 +44,114 @@ class _PerfilPageState extends State<PerfilPage> {
                   Text(
                     "Alucinética Honorata",
                     style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 24
-                    ),
+                        fontWeight: FontWeight.bold, fontSize: 24),
                   ),
-                ]
+                ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 30,
               ),
-              Text(
+              const Text(
                 "Configuração",
                 style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20.0
-                ),
+                    fontWeight: FontWeight.bold, fontSize: 20.0),
               ),
               Container(
-                height: 150.0,
-                padding: EdgeInsets.all(12.0),
+                // Removi a altura fixa para o conteúdo caber dinamicamente
+                // height: 150.0,
+                padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
                 margin: const EdgeInsets.all(10.0),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: Colors.white, // Use Theme.of(context).cardColor
                   borderRadius: BorderRadius.circular(16.0),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.7),
+                      color: Colors.black.withOpacity(0.1), // Sombra mais suave
                       blurRadius: 8,
-                      offset: Offset(0, 4), // deslocamento da sombra
+                      offset: const Offset(0, 4), // deslocamento da sombra
                     ),
                   ],
                 ),
                 child: Column(
                   children: [
-                    GestureDetector(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Icon(
-                            Icons.account_circle_sharp,
-                            color: Colors.grey,
-                          ),
-                          Text(
-                            "Configuração de Conta",
-                            style: TextStyle(
-                              fontWeight: FontWeight.w300,
-                              fontSize: 16
-                            ),
-                          ),
-                          Icon(
-                            Icons.arrow_forward_outlined,
-                            color: Colors.indigo,
-                          ),
-                        ],
-                      ),
+                    // Mudei para ListTile para um visual mais padrão
+                    _buildConfigItem(
+                      context,
+                      icon: Icons.account_circle_sharp,
+                      text: "Configuração de Conta",
                       onTap: () {
                         Navigator.of(context).pushNamed('/edit');
                       },
                     ),
-                    SizedBox(
-                      height: 5,
+                    _buildDivider(),
+                    _buildConfigItem(
+                      context,
+                      icon: Icons.notifications_outlined, // Ícone diferente
+                      text: "Configuração de notificação",
+                      onTap: () {
+                         // Você precisará criar esta página
+                        // Navigator.of(context).pushNamed('/notifications');
+                      },
                     ),
-                    GestureDetector(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Icon(
-                            Icons.account_circle_sharp,
-                            color: Colors.grey,
-                          ),
-                          Text(
-                            "Configuração de notificação",
-                            style: TextStyle(
-                              fontWeight: FontWeight.w300,
-                              fontSize: 16
-                            ),
-                          ),
-                          Icon(
-                            Icons.arrow_forward_outlined,
-                            color: Colors.indigo,
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    GestureDetector(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Icon(
-                            Icons.account_circle_sharp,
-                            color: Colors.grey,
-                          ),
-                          Text(
-                            "Feedback",
-                            style: TextStyle(
-                              fontWeight: FontWeight.w300,
-                              fontSize: 16
-                            ),
-                          ),
-                          Icon(
-                            Icons.arrow_forward_outlined,
-                            color: Colors.indigo,
-                          ),
-                        ],
-                      ),
+                    _buildDivider(),
+                    _buildConfigItem(
+                      context,
+                      icon: Icons.feedback_outlined, // Ícone diferente
+                      text: "Feedback",
+                      onTap: () {
+                        // Navega para a nova página
+                        Navigator.of(context).pushNamed('/feedback');
+                      },
                     ),
                   ],
-                )
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Text(
-                "Outros",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20.0
                 ),
               ),
+              const SizedBox(
+                height: 20,
+              ),
+              const Text(
+                "Outros",
+                style: TextStyle(
+                    fontWeight: FontWeight.bold, fontSize: 20.0),
+              ),
               Container(
-                height: 110.0,
-                padding: EdgeInsets.all(12.0),
+                // height: 110.0, // Removido
+                padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
                 margin: const EdgeInsets.all(10.0),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(16.0),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.7),
+                      color: Colors.black.withOpacity(0.1),
                       blurRadius: 8,
-                      offset: Offset(0, 4), // deslocamento da sombra
+                      offset: const Offset(0, 4), 
                     ),
                   ],
                 ),
                 child: Column(
                   children: [
-                    GestureDetector(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Icon(
-                            Icons.account_circle_sharp,
-                            color: Colors.grey,
-                          ),
-                          Text(
-                            "Sobre nós",
-                            style: TextStyle(
-                              fontWeight: FontWeight.w300,
-                              fontSize: 16
-                            ),
-                          ),
-                          Icon(
-                            Icons.arrow_forward_outlined,
-                            color: Colors.indigo,
-                          ),
-                        ],
-                      ),
+                    _buildConfigItem(
+                      context,
+                      icon: Icons.info_outline, // Ícone diferente
+                      text: "Sobre nós",
+                      onTap: () {
+                        // Navega para a nova página
+                        Navigator.of(context).pushNamed('/about');
+                      },
                     ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    GestureDetector(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Icon(
-                            Icons.account_circle_sharp,
-                            color: Colors.grey,
-                          ),
-                          Text(
-                            "Perguntas Frequentes",
-                            style: TextStyle(
-                              fontWeight: FontWeight.w300,
-                              fontSize: 16
-                            ),
-                          ),
-                          Icon(
-                            Icons.arrow_forward_outlined,
-                            color: Colors.indigo,
-                          ),
-                        ],
-                      ),
+                    _buildDivider(),
+                    _buildConfigItem(
+                      context,
+                      icon: Icons.quiz_outlined, // Ícone diferente
+                      text: "Perguntas Frequentes",
+                      onTap: () {
+                        // Navega para a nova página
+                        Navigator.of(context).pushNamed('/faq');
+                      },
                     ),
                   ],
-                )
+                ),
               ),
               GestureDetector(
                 onTap: () async {
@@ -229,44 +159,72 @@ class _PerfilPageState extends State<PerfilPage> {
                   await ApiService.deleteToken(); // Remove o token
                   await ApiService.deleteUserId(); // Se você estiver salvando o user_id também
                   AppController.instance.deslogar();
-                  Navigator.of(context).pushReplacementNamed('/login');
+                  // Garante que o contexto é válido antes de navegar
+                  if (!mounted) return;
+                  Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
                 },
                 child: Container(
                   width: double.infinity,
                   height: 50.0,
-                  margin: EdgeInsets.all(20),
+                  margin: const EdgeInsets.all(20),
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
-                    color: Color(0xFFED1836),
+                    color: const Color(0xFFED1836),
                     borderRadius: BorderRadius.circular(16.0),
                   ),
-                  
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
+                    children: const [
                       Icon(
                         Icons.exit_to_app_outlined,
                         color: Colors.white,
-                        ),
+                      ),
                       SizedBox(
                         width: 5,
-                        ),
+                      ),
                       Text(
                         "Sair",
                         style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white
-                        ),
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
                       ),
                     ],
-                  )
+                  ),
                 ),
               ),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  // Widget auxiliar para criar os itens da lista
+  Widget _buildConfigItem(BuildContext context,
+      {required IconData icon,
+      required String text,
+      required VoidCallback onTap}) {
+    return ListTile(
+      leading: Icon(icon, color: Colors.grey[600]),
+      title: Text(
+        text,
+        style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
+      ),
+      trailing: const Icon(Icons.arrow_forward_ios_outlined,
+          color: Colors.indigo, size: 18),
+      onTap: onTap,
+    );
+  }
+
+  // Widget auxiliar para o divisor
+  Widget _buildDivider() {
+    return Divider(
+      height: 1,
+      thickness: 1,
+      color: Colors.grey[200],
+      indent: 16,
+      endIndent: 16,
     );
   }
 }

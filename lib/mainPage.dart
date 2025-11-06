@@ -3,6 +3,8 @@ import 'package:flutter_application_test/tab_main/homePage.dart';
 import 'package:flutter_application_test/tab_main/mapaPage.dart';
 import 'package:flutter_application_test/tab_main/perfilPage.dart';
 import 'package:flutter_application_test/tab_main/reservaPage.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_application_test/provider/reserva_provider.dart';
 
 
 
@@ -34,6 +36,22 @@ class MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
+
+    // reconstruída e o código abaixo será executado.
+    final tabIndex = context.watch<ReservaProvider>().tabIndexParaMostrar;
+
+    if (tabIndex != _paginaSelecionada) {
+      // Usa um "post-frame callback" para chamar o setState DEPOIS
+      // que o build terminar, evitando erros.
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        setState(() {
+          _paginaSelecionada = tabIndex;
+        });
+      });
+    }
+
+
+    
     return Scaffold(
       // Ver linhas do layout: >flutter debug painter
 
@@ -79,6 +97,7 @@ class MainPageState extends State<MainPage> {
               text: "Home",
               icone: Icons.home_outlined,
               funcao: () {
+                Provider.of<ReservaProvider>(context, listen: false).mudarTab(0);
                 setState((){
                   _paginaSelecionada = 0;
 
@@ -99,6 +118,7 @@ class MainPageState extends State<MainPage> {
               text: "Mapa",
               icone: Icons.map_outlined,
               funcao: () {
+                Provider.of<ReservaProvider>(context, listen: false).mudarTab(1);
                 setState(() {
                   _paginaSelecionada = 1;
                   _mapPageKey.currentState?.buscarCarros();
@@ -116,6 +136,7 @@ class MainPageState extends State<MainPage> {
               text: "Reservas",
               icone: Icons.search,
               funcao: () {
+                Provider.of<ReservaProvider>(context, listen: false).mudarTab(2);
                 setState(() => _paginaSelecionada = 2);
               },
               asset: 'assets/icon/bottom_appbar_reservas_icon.png',
@@ -130,6 +151,7 @@ class MainPageState extends State<MainPage> {
               text: "Perfil",
               icone: Icons.account_circle_outlined,
               funcao: () {
+                Provider.of<ReservaProvider>(context, listen: false).mudarTab(3);
                 setState(() => _paginaSelecionada = 3);
               },
               asset: 'assets/icon/bottom_appbar_perfil_icon.png',

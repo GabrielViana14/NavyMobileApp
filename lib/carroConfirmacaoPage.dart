@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_test/models/carro_model.dart';
+import 'package:flutter_application_test/models/reserva_model.dart';
+import 'package:flutter_application_test/provider/reserva_provider.dart';
+import 'package:provider/provider.dart';
 
 class CarroConfirmacaoPage extends StatefulWidget {
   final CarroModel carro;
@@ -374,6 +377,23 @@ class CarroConfirmacaoPageState extends State<CarroConfirmacaoPage> {
         child: ElevatedButton(
           onPressed: () {
             // Ação ao pressionar o botão de reservar
+
+            // Criar o objeto ReservaModel a partir dos dados da tela
+            final novaReserva = ReservaModel.fromConfirmacao(
+              carro: widget.carro,
+              dias: widget.dias,
+              horas: widget.horas,
+              valorTotal: widget.valorTotal,
+              tipoTempo: widget.tipoTempo,
+            );
+
+            // Chamar o provider para "salvar" esta reserva
+            Provider.of<ReservaProvider>(context, listen: false)
+             .criarReserva(novaReserva);
+
+            // Voltar para a tela principal (MainPage)
+            Navigator.of(context).pop();
+            Navigator.of(context).pop();
 
 
           },
