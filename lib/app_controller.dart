@@ -16,9 +16,11 @@ class AppController extends ChangeNotifier{
 
   bool _isDarkTheme = false;
   bool _logado = false;
+  String _userEmail = '';
 
   bool get isDarkTheme => _isDarkTheme;
   bool get logado => _logado;
+  String get userEmail => _userEmail;
 
   // Isso será chamado pelo main.dart antes do runApp
   Future<void> loadFromStorage() async {
@@ -36,6 +38,11 @@ class AppController extends ChangeNotifier{
     await _storage.write(key: _logadoKey, value: newValue.toString());
   }
 
+  void setUserData({required String userEmail}) {
+    _userEmail = userEmail;
+    notifyListeners();
+  }
+
   Future<void> logar() async {
     _logado = true;
     await _saveLogado(true);
@@ -43,6 +50,7 @@ class AppController extends ChangeNotifier{
   }
 
   Future<void> deslogar() async {
+    _userEmail = '';
     _logado = false;
     await _saveLogado(false);
     notifyListeners();

@@ -54,6 +54,45 @@ class ApiService {
   }
 }
 
+static Future<Map<String, dynamic>> getDadosUsuario(String userId) async {
+    // Pega o token que foi salvo durante o login
+    final token = await getToken(); // Você deve ter um método para pegar o token salvo
+
+    if (token == null) {
+      throw Exception('Token não encontrado');
+    }
+
+    // Usando o endpoint /filter da sua imagem
+    final uri = Uri.parse('https://navy-backend.onrender.com/api/users/filter').replace(
+      queryParameters: {
+        '_id': userId, // Isso vai gerar a URL: .../filter?id=12345
+      },
+    );
+
+    final response = await http.get(
+      uri,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token', // Autenticação
+      },
+    );
+
+    if (response.statusCode == 200) {
+      // O endpoint "filter" geralmente retorna uma LISTA [ ]
+      final List<dynamic> data = jsonDecode(response.body);
+      
+      if (data.isNotEmpty) {
+        // Retorna o primeiro usuário da lista (que deve ser o único)
+        return data.first as Map<String, dynamic>; 
+      } else {
+        throw Exception('Usuário não encontrado com o ID');
+      }
+    } else {
+      print('Falha ao carregar dados do usuário: ${response.body}');
+      throw Exception('Falha ao carregar dados do usuário');
+    }
+  }
+
 // Método para salvar userId localmente
 static Future<void> saveUserId(String userId) async {
   await _storage.write(key: 'user_id', value: userId);
@@ -77,7 +116,7 @@ static Future<String?> getUserId() async {
       },
     );
 
-    print('GET /cars/: ${response.body}');
+    // print('GET /cars/: ${response.body}');
 
     if (response.statusCode == 200) {
       final List<dynamic> jsonList = jsonDecode(response.body);

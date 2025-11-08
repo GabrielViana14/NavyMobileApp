@@ -40,13 +40,13 @@ class AboutUsPage extends StatelessWidget {
               const _InfoCard(
                 title: 'Nossa Missão',
                 content:
-                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+                    'O objetivo principal do projeto é desenvolver o Navy, um aplicativo inovador de locação de automóveis, com interface para dispositivos móveis e plataforma web, voltado a oferecer uma experiência prática, segura e descomplicada ao conectar locatários a empresas ou proprietários de veículos. Com um modelo diferenciado das locadoras tradicionais, o Navy funcionará sem lojas físicas, utilizando pontos estratégicos urbanos para retirada e devolução dos veículos, permitindo que o usuário inicie a locação em um local e finalize em outro.',
               ),
               const SizedBox(height: 20),
               const _InfoCard(
                 title: 'Nossa Visão',
                 content:
-                    'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+                    'A proposta do Navy é oferecer uma solução digital escalável, com usabilidade moderna e aderente à LGPD (Lei Geral de Proteção de Dados). Seu posicionamento é ser uma alternativa ágil, flexível e confiável para locação de automóveis no cenário urbano. O serviço será semelhante aos de aluguel de patinetes e bicicletas em grandes cidades, em que a devolução pode ser feita em um local diferente da retirada.',
               ),
               const SizedBox(height: 30),
               Text(

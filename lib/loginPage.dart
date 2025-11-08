@@ -14,6 +14,68 @@ class LoginPage extends StatefulWidget {
 class LoginPageState extends State<LoginPage> {
   String usuario = '';
   String senha = '';
+  // Variável de estado para controlar o loading
+  bool _isLoading = false;
+
+  Future<void> _performLogin() async {
+    // Se já estiver carregando, impede novo clique
+    if (_isLoading) return;
+
+    // Ativa o estado de loading
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      // print('iniciando login... usuario: ${usuario.trim()} - senha: ${senha.trim()} ');
+      final loginResult =
+          await ApiService.loginUsuario(usuario.trim(), senha.trim());
+      if (loginResult != null) {
+        // print('Token: ${loginResult.token}');
+        // print('UserId: ${loginResult.userId}');
+        AppController.instance.logar();
+
+        try {
+          final userData = await ApiService.getDadosUsuario(loginResult.userId);
+          String nomeDoUsuario = userData['email'];
+          // print('Dados do usuário obtidos com sucesso: $userData');
+          AppController.instance.setUserData(userEmail: nomeDoUsuario);
+          AppController.instance.logar(); // Sinaliza que está logado
+          
+          // Verifica se o widget ainda está montado antes de navegar
+          if (!mounted) return;
+          Navigator.of(context).pushNamed('/main'); // Navega para a home
+
+        } catch (e) {
+          // print('Login bem-sucedido, mas falha ao buscar dados do usuário: $e');
+          AppController.instance.logar();
+
+          // Verifica se o widget ainda está montado antes de navegar
+          if (!mounted) return;
+          Navigator.of(context).pushNamed('/main');
+        }
+      }
+    } catch (e) {
+      print('Erro no login: $e');
+      
+      // Verifica se o widget ainda está montado antes de mostrar o SnackBar
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Usuário ou senha incorretos"),
+          backgroundColor: Colors.red,
+        ),
+      );
+    } finally {
+      // Garante que o loading seja desativado ao final,
+      // mesmo se der erro ou o usuário navegar
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,6 +130,7 @@ class LoginPageState extends State<LoginPage> {
                           onChanged: (value) {
                             usuario = value;
                           },
+                          enabled: !_isLoading,  // Desabilita o campo se estiver carregando
                           keyboardType: TextInputType.emailAddress,
                           decoration: InputDecoration(
                             hintText: 'Usuário',
@@ -91,6 +154,7 @@ class LoginPageState extends State<LoginPage> {
                           onChanged: (value) {
                             senha = value;
                           },
+                          enabled: !_isLoading,  // Desabilita o campo se estiver carregando
                           obscureText: true, // Mudei para false para facilitar o teste
                           decoration: InputDecoration(
                             hintText: 'Senha',
@@ -111,42 +175,33 @@ class LoginPageState extends State<LoginPage> {
                           height: 40.0,
                         ),
                         GestureDetector(
-                          onTap: () async {
-                            try {
-                              print('iniciando login... usuario: ${usuario.trim()} - senha: ${senha.trim()} ');
-                              final loginResult = await ApiService.loginUsuario(usuario.trim(), senha.trim());
-                              if (loginResult != null) {
-                                print('Token: ${loginResult.token}');
-                                print('UserId: ${loginResult.userId}');
-                                AppController.instance.logar();
-                                Navigator.of(context).pushNamed('/main');
-                              }
-                            } catch (e) {
-                              print('Erro no login: $e');
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text("Usuário ou senha incorretos"),
-                                  backgroundColor: Colors.red,
-                                ),
-                              );
-                            }
-                          },
+                          onTap: _isLoading ? null : _performLogin,
                           child: Container(
                             width: double.infinity,
                             height: 40,
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
-                              color: Color(0xFFE35245),
+                              color: _isLoading ? Colors.grey : Color(0xFFE35245), // Muda a cor para indicar que está desabilitado
                               borderRadius: BorderRadius.circular(25.0)
                             ),
-                            child: Text(
-                              "Entrar",
-                              style: TextStyle(
-                                fontSize: 26.0,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold
-                              ),
-                            ),
+                            child: _isLoading
+                                  ? SizedBox(
+                                      height: 26.0,
+                                      width: 26.0,
+                                      child: CircularProgressIndicator(
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                                Colors.white),
+                                        strokeWidth: 3.0,
+                                      ),
+                                    )
+                                  : Text(
+                                      "Entrar",
+                                      style: TextStyle(
+                                          fontSize: 26.0,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold),
+                                    ),
                           ),
                         ),
                         SizedBox(

@@ -18,6 +18,7 @@ class _PerfilPageState extends State<PerfilPage> {
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
         elevation: 1,
+        automaticallyImplyLeading: false, // Remove o botão de voltar
       ),
       body: Container(
         padding: const EdgeInsets.all(12),
@@ -29,7 +30,7 @@ class _PerfilPageState extends State<PerfilPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
-                children: const [
+                children: [
                   SizedBox(
                     width: 10,
                   ),
@@ -41,7 +42,9 @@ class _PerfilPageState extends State<PerfilPage> {
                     width: 10,
                   ),
                   Text(
-                    "Alucinética Honorata",
+                    AppController.instance.userEmail.isEmpty 
+                    ? "Carregando..." 
+                    : AppController.instance.userEmail,
                     style: TextStyle(
                         fontWeight: FontWeight.bold, fontSize: 24),
                   ),
