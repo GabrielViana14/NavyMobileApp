@@ -6,11 +6,6 @@ class AboutUsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     
-    final bodyStyle = TextStyle(
-      fontSize: 16,
-      color: Colors.grey[700],
-      height: 1.5, // Espaçamento entre linhas
-    );
 
     return Scaffold(
       appBar: AppBar(
