@@ -43,7 +43,7 @@ void main() {
       expect(listenerCount, 2, reason: "notifyListeners() should be called again");
     });
 
-    test('logar should set logado to true, save to storage, and notify listeners', () async {
+    test('logar deve set logado to true, salvar no storage, e notify listeners', () async {
       // Quando 'write' for chamado com 'key: logado' e 'value: true', retorne um Future vazio.
       when(() => mockStorage.write(key: 'logado', value: 'true')).thenAnswer((_) => Future.value());
 

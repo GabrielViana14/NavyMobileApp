@@ -51,7 +51,7 @@ class MapaPageState extends State<MapaPage> with TickerProviderStateMixin {
 
   void buscarCarros () async{
     try {
-      final carros = await ApiService.getCarros();
+      final carros = await ApiService.getCarrosRent();
       setState(() {
         _carros = carros;
         _criarMarcadores();

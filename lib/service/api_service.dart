@@ -133,6 +133,50 @@ static Future<String?> getUserId() async {
     }
   }
 
+  static Future<List<CarroModel>> getCarrosRent() async{
+    final token = await getToken();
+    final String baseUrl = 'https://navy-backend.onrender.com/api/cars/filter/';
+
+    final Map<String, String> queryParams = {
+      'operationType': 'rent',
+      // Se você precisar adicionar mais filtros, basta adicioná-los a este Map
+      // 'outroFiltro': 'outroValor'
+    };
+
+    final url = Uri.parse(baseUrl).replace(queryParameters: queryParams);
+
+    final response = await http.get(
+      url,
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json', 
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonList = jsonDecode(response.body);
+      final carros = jsonList
+          .where((item) => item != null && item is Map<String, dynamic>)
+          .map<CarroModel>((json) => CarroModel.fromJson(json as Map<String, dynamic>))
+          .toList();
+      
+      carros.sort((carroA, carroB) {
+        // Use '?? ""' para evitar erros se o ID for nulo
+        final a = carroA.id ?? ""; // <-- Troque 'id' se o nome no seu Model for outro
+        final b = carroB.id ?? ""; // <-- Troque 'id' se o nome no seu Model for outro
+        
+        // Compara A com B para ordem ascendente
+        return b.compareTo(a); 
+      });
+
+      return carros;
+    } else {
+      throw Exception('Erro ao filtrar carros: ${response.statusCode} - ${response.body}');
+    }
+
+
+  }
+
   static Future<Map<String, dynamic>> getUsuarioPorId() async {
     final token = await getToken();
     final userId = await getUserId();
@@ -176,6 +220,9 @@ static Future<Map<String, dynamic>> getUsuario() async {
     throw Exception('Erro ao buscar usuário');
   }
 }
+
+
+
 
 static Future<void> atualizarUsuario(Map<String, dynamic> data) async {
   final token = await getToken();

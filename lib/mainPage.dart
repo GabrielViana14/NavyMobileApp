@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_test/chatPage.dart';
 import 'package:flutter_application_test/tab_main/homePage.dart';
 import 'package:flutter_application_test/tab_main/mapaPage.dart';
 import 'package:flutter_application_test/tab_main/perfilPage.dart';
@@ -73,9 +74,33 @@ class MainPageState extends State<MainPage> {
       ),
       */
 
-      body: IndexedStack(
-        index: _paginaSelecionada,
-        children: _pages,
+      body: Stack(
+        children: [
+          IndexedStack(
+            index: _paginaSelecionada,
+            children: _pages,
+          ),
+          Align(
+            alignment: Alignment.centerLeft, // Posição: centro-esquerda
+            child: Padding(
+              padding: const EdgeInsets.only(left: 8.0), // Um pequeno espaço da borda
+              child: FloatingActionButton(
+                mini: true, // Botão pequeno
+                heroTag: 'chat_fab', // Tag única para evitar conflitos de animação
+                onPressed: () {
+                  // Ação de clique: navegar para a ChatPage
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const ChatPage()),
+                  );
+                },
+                backgroundColor: Colors.white, // Cor do seu app
+                child: const Icon(Icons.chat_bubble_outline),
+              ),
+            ),
+          ),
+
+        ],
       ),
       
       /*

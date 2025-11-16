@@ -36,14 +36,11 @@ class CarroModel {
       year: json['year'] ?? 0,
       mileage: json['mileage'] ?? 0,
       price: double.tryParse(json['price']?.toString() ?? '') ?? 0.0,
-      pricePerHour: json['pricePerHour']?.toDouble() 
-              ?? (json['price'] != null ? (json['price'].toDouble() * 0.005) : 20.0),
+      pricePerHour: json['price_per_hour']?.toDouble() ?? 0.0,
       address: json['address'] != null
         ? Address.fromJson(json['address'] as Map<String, dynamic>)
         : Address.empty(), // ou outra forma de criar um endereço padrão
-      photoUrl: json['photo_url'] != null && json['photo_url'] != ''
-        ? 'https://woxvltaqfrkguonebeeu.supabase.co/storage/v1/object/public/${json['photo_url']}'
-        : '', // ou uma URL de placeholder
+      photoUrl: json['photo_url'] ?? '',
         // Acessando o campo photoUrl
       license_plate: json['license_plate'] ?? '',
     );

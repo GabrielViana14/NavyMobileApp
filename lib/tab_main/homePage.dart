@@ -17,12 +17,12 @@ class HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    _carros = ApiService.getCarros();
+    _carros = ApiService.getCarrosRent();
   }
 
   void recarregarCarros() {
     setState(() {
-      _carros = ApiService.getCarros();
+      _carros = ApiService.getCarrosRent();
     });
   }
 
